@@ -7,7 +7,14 @@ const NativeStack = createNativeStackNavigator();
 const Stack = () => {
   return (
     <NativeStack.Navigator>
-      <NativeStack.Screen name="WritePage" component={WritePage} />
+      <NativeStack.Screen
+        name="WritePage"
+        component={WritePage}
+        options={{
+          headerTitle: "방 만들기",
+          headerTintColor: "#3772ff",
+        }}
+      />
     </NativeStack.Navigator>
   );
 };

@@ -1,11 +1,13 @@
 export const lightTheme = {
+  mainColor: "#3772ff",
   bgColor: "white",
-  textColor: "",
+  textColor: "black",
   btnColor: "",
 };
 
 export const darkTheme = {
+  mainColor: "#3772ff",
   bgColor: "black",
-  textColor: "",
+  textColor: "white",
   btnColor: "",
 };
