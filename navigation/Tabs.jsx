@@ -9,17 +9,17 @@ const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
   return (
-    <Tab.Navigator
-      initialRouteName="HomePage"
-      screenOptions={{ headerShown: false }}
-    >
+    <Tab.Navigator initialRouteName="HomePage">
       <Tab.Screen
         name="HomePage"
         component={HomePage}
         options={{
+          // 📍 나중에 로고 이미지로 대체
+          title: "ㅂㄷㅁㅇ",
           tabBarIcon: ({ focused, color, size }) => {
             return <Ionicons name="home-sharp" size={size} color="#3772FF" />;
           },
+          tabBarLabel: "Home",
         }}
       />
       <Tab.Screen
@@ -31,6 +31,7 @@ const Tabs = () => {
               <Ionicons name="chatbox-ellipses" size={size} color="#3772FF" />
             );
           },
+          tabBarLabel: "Chat",
         }}
       />
       <Tab.Screen
@@ -46,6 +47,7 @@ const Tabs = () => {
               />
             );
           },
+          tabBarLabel: "User",
         }}
       />
     </Tab.Navigator>
