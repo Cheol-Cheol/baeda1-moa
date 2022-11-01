@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "baeda1-moa",
+    "slug": "baeda1-moa",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "baeda1-moa"
+}
