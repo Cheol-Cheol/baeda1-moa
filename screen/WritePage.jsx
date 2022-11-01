@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { TouchableOpacity, View } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
 
 Date.prototype.format = function (f) {
   if (!this.valueOf()) return " ";
@@ -75,7 +75,7 @@ const InputGroup = styled.View`
 const Label = styled.Text`
   color: ${({ theme }) => theme.textColor};
   font-size: 18px;
-  font-weight: 200;
+  font-weight: 400;
   margin: 10px 10px;
 `;
 
@@ -84,6 +84,14 @@ const TextInput = styled.TextInput`
   border-radius: 20px;
   padding: 10px 20px;
   /* box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); */
+`;
+
+const OrderTimePicker = styled.TouchableOpacity``;
+
+const CategoryPicker = styled.View`
+  border: 1px solid #dad8d8;
+  border-radius: 20px;
+  padding: 10px 20px;
 `;
 
 const Btn = styled.TouchableOpacity`
@@ -133,8 +141,13 @@ const WritePage = ({ navigation: { goBack } }) => {
     setEnteredOrderTime(date.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
   };
 
+  const onChangeCategory = (category) => {
+    console.log("category: ", category);
+    setEnteredCategory(category);
+  };
+
   const onSubmitHandler = () => {
-    // 1. 데이터 다 들어갔나 유효성 체크하기
+    // 1. 데이터 다 들어갔나 유효성 체크하기 (특히 category는 null아닌 지 확인!)
     // 2. 데이터 묶어서 저장하기
     goBack();
   };
@@ -163,7 +176,7 @@ const WritePage = ({ navigation: { goBack } }) => {
 
       <InputGroup>
         <Label>주 문 시 간</Label>
-        <TouchableOpacity onPress={showDatePicker}>
+        <OrderTimePicker onPress={showDatePicker}>
           <TextInput
             pointerEvents="none"
             placeholder="주문시간을 입력해주세요"
@@ -178,12 +191,28 @@ const WritePage = ({ navigation: { goBack } }) => {
             onConfirm={onChangeOrderTime}
             onCancel={hideDatePicker}
           />
-        </TouchableOpacity>
+        </OrderTimePicker>
       </InputGroup>
 
       <InputGroup>
         <Label>카 테 고 리</Label>
-        <TextInput placeholder="상호명을 입력해주세요." />
+        <CategoryPicker>
+          <RNPickerSelect
+            onValueChange={onChangeCategory}
+            textInputProps={{ underlineColorAndroid: "transparent" }}
+            fixAndroidTouchableBug={true}
+            items={[
+              { label: "한식", value: "한식" },
+              { label: "일식", value: "일식" },
+              { label: "중식", value: "중식" },
+              { label: "족발/보쌈", value: "족발보쌈" },
+              { label: "고기", value: "고기" },
+              { label: "분식", value: "분식" },
+              { label: "패스트푸드", value: "패스트푸드" },
+              { label: "카페/디저트", value: "카페디저트" },
+            ]}
+          />
+        </CategoryPicker>
       </InputGroup>
 
       <Btn onPress={onSubmitHandler}>
