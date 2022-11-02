@@ -14,8 +14,7 @@ const Tabs = () => {
         name="HomePage"
         component={HomePage}
         options={{
-          // 📍 나중에 로고 이미지로 대체
-          title: "ㅂㄷㅁㅇ",
+          headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             return <Ionicons name="home-sharp" size={size} color="#3772FF" />;
           },
