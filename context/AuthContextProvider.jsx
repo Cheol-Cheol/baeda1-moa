@@ -27,19 +27,23 @@ const AuthContextProvider = ({ children }) => {
     // 2. kakao로부터 받은 웹뷰를 통해 서버에 토큰을 전송하고, 서버는 프론트에 고유한 토큰을 보내준다.
 
     // 3. 여기서 token을 secure-storage에 저장한 다음, reducer(SIGN_IN)를 통해서 상태값을 바꿔준다.
-    await SecureStore.setItemAsync("userToken", true);
-    dispatchAuth({ type: "SIGN_IN", token: true });
+    let dummy = { id: 1 };
+    await SecureStore.setItemAsync("userToken", JSON.stringify(dummy));
+    dispatchAuth({ type: "SIGN_IN", token: { id: 3 } });
+    console.log("kakaoSignIn: 성공!");
   };
 
   const signOut = async () => {
     await SecureStore.deleteItemAsync("userToken");
     dispatchAuth({ type: "SIGN_OUT" });
+    console.log("signOut: 성공!");
   };
 
   const restoreToken = async () => {
     let userToken;
     try {
       userToken = await SecureStore.getItemAsync("userToken");
+      console.log("userToken", userToken);
     } catch (e) {
       console.log("RestoreTokenErr: ", e.message);
     }
