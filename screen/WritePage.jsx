@@ -64,7 +64,7 @@ Number.prototype.zf = function (len) {
 
 const Container = styled.View`
   flex: 1;
-  padding: 0px 30px;
+  padding: 0px 25px;
   background-color: ${({ theme }) => theme.bgColor};
 `;
 
@@ -136,6 +136,7 @@ const WritePage = ({ navigation: { goBack } }) => {
   };
 
   const onChangeOrderTime = (date) => {
+    // 📍 유효성 검사 해야됨. 오늘 날짜보다 이전 날짜 선택 시 다시 선택하라고 알려주기
     console.log("dateFormat: ", date.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
     hideDatePicker();
     setEnteredOrderTime(date.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
@@ -208,6 +209,7 @@ const WritePage = ({ navigation: { goBack } }) => {
               { label: "족발/보쌈", value: "족발보쌈" },
               { label: "고기", value: "고기" },
               { label: "분식", value: "분식" },
+              { label: "피자", value: "피자" },
               { label: "패스트푸드", value: "패스트푸드" },
               { label: "카페/디저트", value: "카페디저트" },
             ]}
