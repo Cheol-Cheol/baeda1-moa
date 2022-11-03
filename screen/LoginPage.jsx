@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
+import LogoImage from "../assets/images/logo.svg";
 import LogoSvg from "../components/UI/LogoSvg";
 
 const Container = styled.View`
@@ -51,7 +52,7 @@ const LoginPage = () => {
   return (
     <Container>
       <LogoContainer>
-        <LogoSvg width={330} height={300} />
+        <LogoSvg width={330} height={300} asset={LogoImage} />
         <LogoTitle>🔔 1/N 배달료 커뮤니티 </LogoTitle>
       </LogoContainer>
       <KaKaoBtnContainer>
