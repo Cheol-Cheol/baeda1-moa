@@ -43,7 +43,7 @@ const AuthContextProvider = ({ children }) => {
     let userToken;
     try {
       userToken = await SecureStore.getItemAsync("userToken");
-      console.log("userToken", userToken);
+      // console.log("userToken", userToken);
     } catch (e) {
       console.log("RestoreTokenErr: ", e.message);
     }

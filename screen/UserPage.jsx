@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
+import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
+import { AuthContext } from "../context/AuthContextProvider";
 
 const Container = styled.View`
   flex: 1;
@@ -13,9 +15,14 @@ const Text = styled.Text`
 `;
 
 const UserPage = () => {
+  const { signOut } = useContext(AuthContext);
   return (
     <Container>
       <Text>UserPage</Text>
+      {/* FIXME: 잠시 로그아웃 대체품 */}
+      <TouchableOpacity onPress={signOut}>
+        <Text>로그아웃</Text>
+      </TouchableOpacity>
     </Container>
   );
 };
