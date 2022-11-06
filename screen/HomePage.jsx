@@ -82,10 +82,10 @@ const HomePage = ({ navigation: { navigate } }) => {
       <View>
         <Text
           style={{
+            fontFamily: "black-han-sans-regular",
             fontSize: 30,
             fontWeight: "bold",
             color: "#3772ff",
-            letterSpacing: 6,
           }}
         >
           배달모아
@@ -95,6 +95,7 @@ const HomePage = ({ navigation: { navigate } }) => {
       <FlatList
         data={DUMMY_DATA}
         ItemSeparatorComponent={HSeparator}
+        keyExtractor={(item) => item.roomId}
         renderItem={({ item }) => <List fullData={item} />}
       />
 
