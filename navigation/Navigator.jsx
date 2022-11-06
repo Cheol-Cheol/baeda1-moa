@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useReducer } from "react";
+import React, { useContext, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Tabs from "../navigation/Tabs";
 import Stack from "./Stack";
 import LoginPage from "../screen/LoginPage";
 import { AuthContext } from "../context/AuthContextProvider";
+import ChatPage from "../screen/ChatPage";
 
 const Nav = createNativeStackNavigator();
 
@@ -28,10 +29,13 @@ const navigator = () => {
       {userToken == null ? (
         <Nav.Screen name="LoginPage" component={LoginPage} />
       ) : (
-        <Nav.Group screenOptions={{ presentation: "modal" }}>
-          <Nav.Screen name="Tabs" component={Tabs} />
-          <Nav.Screen name="Stack" component={Stack} />
-        </Nav.Group>
+        <>
+          <Nav.Group screenOptions={{ presentation: "modal" }}>
+            <Nav.Screen name="Tabs" component={Tabs} />
+            <Nav.Screen name="Stack" component={Stack} />
+          </Nav.Group>
+          <Nav.Screen name="ChatPage" component={ChatPage} />
+        </>
       )}
     </Nav.Navigator>
   );
