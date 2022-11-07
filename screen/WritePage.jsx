@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
+import { Alert } from "react-native";
 
 Date.prototype.format = function (f) {
   if (!this.valueOf()) return " ";
@@ -126,7 +127,7 @@ const WritePage = ({ navigation: { goBack } }) => {
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
-
+  // TODO: 📍 제목, 상호명 focus out시키기 onBlur?
   const onChangeTitle = (title) => {
     setEnteredTitle(title);
   };
@@ -137,20 +138,38 @@ const WritePage = ({ navigation: { goBack } }) => {
 
   const onChangeOrderTime = (date) => {
     // 📍 유효성 검사 해야됨. 오늘 날짜보다 이전 날짜 선택 시 다시 선택하라고 알려주기
-    console.log("dateFormat: ", date.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
+    // console.log("dateFormat: ", date.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
     hideDatePicker();
     setEnteredOrderTime(date.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
   };
 
   const onChangeCategory = (category) => {
-    console.log("category: ", category);
+    // console.log("category: ", category);
     setEnteredCategory(category);
   };
 
-  const onSubmitHandler = () => {
+  const onSubmitHandler = async () => {
+    // FIXME: react-hook-form 라이브러리로 폼 validation 가능하단 점 참고!
     // 1. 데이터 다 들어갔나 유효성 체크하기 (특히 category는 null아닌 지 확인!)
-    // 2. 데이터 묶어서 저장하기
-    goBack();
+    if (
+      enteredTitle &&
+      enteredBusinessName &&
+      enteredOrderTime &&
+      enteredCategory
+    ) {
+      const data = {
+        roomid: Date.now(),
+        admin: "",
+        title: enteredTitle,
+        businessName: enteredBusinessName,
+        orderTime: enteredOrderTime,
+        category: enteredCategory,
+      };
+      goBack();
+    } else {
+      Alert.alert("모든 값을 입력해주세요.");
+      return;
+    }
   };
 
   return (

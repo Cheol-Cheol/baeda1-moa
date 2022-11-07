@@ -34,7 +34,11 @@ const navigator = () => {
             <Nav.Screen name="Tabs" component={Tabs} />
             <Nav.Screen name="Stack" component={Stack} />
           </Nav.Group>
-          <Nav.Screen name="ChatPage" component={ChatPage} />
+          <Nav.Screen
+            name="ChatPage"
+            component={ChatPage}
+            options={{ headerShown: true, headerTintColor: "#3772ff" }}
+          />
         </>
       )}
     </Nav.Navigator>
