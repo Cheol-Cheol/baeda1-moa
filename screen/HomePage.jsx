@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import List from "../components/List";
 
 const DUMMY_DATA = [
@@ -16,10 +16,10 @@ const DUMMY_DATA = [
   {
     roomId: "2",
     admin: "1de1dxz01012",
-    title: "얼죽아!",
-    businessName: "빽다방",
+    title: "족발 땡긴다!",
+    businessName: "대왕족발",
     orderTime: "2022년 11월 02일 오후 05시 21분",
-    category: "카페디저트",
+    category: "족발보쌈",
   },
   {
     roomId: "3",
@@ -27,19 +27,18 @@ const DUMMY_DATA = [
     title: "1/N 개이득!",
     businessName: "명륜진사갈비",
     orderTime: "2022년 11월 02일 오후 04시 21분",
-    category: "고기",
+    category: "한식",
   },
 ];
 
 const CATEGORY = [
-  { label: "일식", value: "일식" },
+  { label: "전체", value: "전체" },
+  { label: "한식", value: "한식" },
   { label: "중식", value: "중식" },
-  { label: "족발/보쌈", value: "족발보쌈" },
-  { label: "고기", value: "고기" },
+  { label: "일식", value: "일식" },
   { label: "분식", value: "분식" },
   { label: "피자", value: "피자" },
-  { label: "패스트푸드", value: "패스트푸드" },
-  { label: "카페/디저트", value: "카페디저트" },
+  { label: "족발/보쌈", value: "족발보쌈" },
 ];
 
 const Container = styled.View`
@@ -77,6 +76,18 @@ const ListContainer = styled.TouchableOpacity`
 `;
 
 const HomePage = ({ navigation: { navigate } }) => {
+  // TODO: DUMMY_DATA 는 나중에 전역 state가 생성되면 바꿀 예정
+  const [rooms, setRooms] = useState(DUMMY_DATA);
+
+  const onFilterRooms = (value) => {
+    if (value !== "전체") {
+      const filteredData = DUMMY_DATA.filter((room) => room.category === value);
+      setRooms(filteredData);
+    } else {
+      setRooms(DUMMY_DATA);
+    }
+  };
+
   return (
     <Container>
       <View>
@@ -92,19 +103,35 @@ const HomePage = ({ navigation: { navigate } }) => {
         </Text>
       </View>
       <HSeparator />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        {CATEGORY.map((el, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => onFilterRooms(el.value)}
+            style={{
+              backgroundColor: "#9bb6f7",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 6,
+              borderRadius: 10,
+            }}
+          >
+            <Text>{el.label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <HSeparator />
       <FlatList
-        data={DUMMY_DATA}
+        data={rooms}
         ItemSeparatorComponent={HSeparator}
         keyExtractor={(item) => item.roomId}
         renderItem={({ item }) => <List fullData={item} />}
       />
-
-      {/* 📍 이건 FlatList ListHeaderComponent로 연결하기 */}
-      {/* {CATEGORY.map((el, index) => (
-        <View key={index}>
-          <Text>{el.label}</Text>
-        </View>
-      ))} */}
 
       <Btn onPress={() => navigate("Stack", { screen: "WritePage" })}>
         <Ionicons name="add" color="white" size={40} />

@@ -223,14 +223,11 @@ const WritePage = ({ navigation: { goBack } }) => {
             fixAndroidTouchableBug={true}
             items={[
               { label: "한식", value: "한식" },
-              { label: "일식", value: "일식" },
               { label: "중식", value: "중식" },
-              { label: "족발/보쌈", value: "족발보쌈" },
-              { label: "고기", value: "고기" },
+              { label: "일식", value: "일식" },
               { label: "분식", value: "분식" },
               { label: "피자", value: "피자" },
-              { label: "패스트푸드", value: "패스트푸드" },
-              { label: "카페/디저트", value: "카페디저트" },
+              { label: "족발/보쌈", value: "족발보쌈" },
             ]}
           />
         </CategoryPicker>
