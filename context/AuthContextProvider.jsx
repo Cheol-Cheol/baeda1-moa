@@ -1,4 +1,5 @@
 import React, { useReducer } from "react";
+import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import {
   KakaoOAuthToken,
@@ -33,12 +34,22 @@ const AuthContextProvider = ({ children }) => {
     // 1. kakao login 요청하는 API 부분
     const token = await login();
     // 2. 서버에 토큰 전송하기
-    // axios.post();
-
-    // 3. 토큰을 secure-storage에 저장한 다음, reducer(SIGN_IN)를 통해서 상태값을 바꿔준다.
-    await SecureStore.setItemAsync("userToken", JSON.stringify(token));
-    dispatchAuth({ type: "SIGN_IN", token: token });
-    console.log("카카오_로그인 성공!");
+    // body: kakaoToken
+    await axios
+      .post("http://3.37.106.173/api/users", {
+        kakaoToken: token.accessToken,
+      })
+      .then(async function (response) {
+        // 3. 토큰을 secure-storage에 저장한 다음, reducer(SIGN_IN)를 통해서 상태값을 바꿔준다.
+        await SecureStore.setItemAsync(
+          "userToken",
+          JSON.stringify(response.headers.accesstoken)
+        );
+        dispatchAuth({ type: "SIGN_IN", token: response.headers.accesstoken });
+      })
+      .catch(function (error) {
+        console.log("KakaoLoginERR: ", error.response);
+      });
   };
 
   const kakaoSignOut = async () => {
@@ -58,14 +69,14 @@ const AuthContextProvider = ({ children }) => {
     dispatchAuth({ type: "RESTORE_TOKEN", token: userToken });
   };
 
-  const getProfile = async () => {
-    const profile = await getKakaoProfile();
-    console.log(profile);
-  };
+  // const getProfile = async () => {
+  //   const profile = await getKakaoProfile();
+  //   console.log(profile);
+  // };
 
   return (
     <AuthContext.Provider
-      value={{ authState, kakaoSignIn, kakaoSignOut, restoreToken, getProfile }}
+      value={{ authState, kakaoSignIn, kakaoSignOut, restoreToken }}
     >
       {children}
     </AuthContext.Provider>
