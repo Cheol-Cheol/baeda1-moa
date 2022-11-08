@@ -25,7 +25,7 @@ const authReducer = (prevState, action) => {
 
 const AuthContext = React.createContext({});
 
-// FIXME: 만약에 여기서 로직이 이상하다? useMemo을 안 적어서 그런걸수도? 또는 signIn: 이런 이상한 표기법?
+// FIXME: 만약에 여기서 로직이 이상하다? useMemo을 안 적어서 그런걸수도?
 const AuthContextProvider = ({ children }) => {
   const [authState, dispatchAuth] = useReducer(authReducer, defaultAuthState);
 
@@ -41,27 +41,31 @@ const AuthContextProvider = ({ children }) => {
     console.log("카카오_로그인 성공!");
   };
 
-  const signOut = async () => {
-    await logout();
+  const kakaoSignOut = async () => {
+    const message = await logout();
     await SecureStore.deleteItemAsync("userToken");
     dispatchAuth({ type: "SIGN_OUT" });
-    console.log("카카오_로그아웃 성공!");
+    console.log(`카카오_로그아웃 성공! (MSG: ${message})`);
   };
 
   const restoreToken = async () => {
     let userToken;
     try {
       userToken = await SecureStore.getItemAsync("userToken");
-      // console.log("userToken", userToken);
     } catch (e) {
       console.log("RestoreTokenErr: ", e.message);
     }
     dispatchAuth({ type: "RESTORE_TOKEN", token: userToken });
   };
 
+  const getProfile = async () => {
+    const profile = await getKakaoProfile();
+    console.log(profile);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ authState, kakaoSignIn, signOut, restoreToken }}
+      value={{ authState, kakaoSignIn, kakaoSignOut, restoreToken, getProfile }}
     >
       {children}
     </AuthContext.Provider>
