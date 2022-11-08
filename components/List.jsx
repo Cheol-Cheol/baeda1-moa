@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Dimensions, Modal, View, Alert, Text, Pressable } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Dimensions, Modal, Alert } from "react-native";
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -9,15 +8,10 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const ListContainer = styled.TouchableOpacity`
   background-color: white;
   flex-direction: row;
+  justify-content: center;
   padding-vertical: 15px;
   border: 1px solid #eee;
   border-radius: 30px;
-`;
-
-const ListLogo = styled.View`
-  width: 20%;
-  justify-content: center;
-  align-items: center;
 `;
 
 const ListContent = styled.View``;
@@ -75,6 +69,7 @@ const List = ({ fullData }) => {
 
   const goToChatPage = () => {
     setModalVisible(!modalVisible);
+    // TODO: 여기에 채팅방목록에 채팅방 추가하는 통신을 해야함
     navigation.navigate("ChatPage", {
       params: { ...fullData },
     });
@@ -122,10 +117,6 @@ const List = ({ fullData }) => {
       </Modal>
 
       <ListContainer onPress={() => setModalVisible(!modalVisible)}>
-        <ListLogo>
-          <Ionicons name="person" size={45} />
-        </ListLogo>
-
         <ListContent style={{ width: SCREEN_WIDTH / 1.5 }}>
           <Title>{fullData.title}</Title>
           <RowView>
