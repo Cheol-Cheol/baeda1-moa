@@ -1,16 +1,25 @@
 import React, { useReducer } from "react";
 import * as SecureStore from "expo-secure-store";
+import {
+  KakaoOAuthToken,
+  KakaoProfile,
+  KakaoProfileNoneAgreement,
+  getProfile as getKakaoProfile,
+  login,
+  logout,
+  unlink,
+} from "@react-native-seoul/kakao-login";
 
 const defaultAuthState = { isLoading: true, isSignout: false, userToken: null };
 
-const authReducer = (state, action) => {
+const authReducer = (prevState, action) => {
   switch (action.type) {
     case "RESTORE_TOKEN":
-      return { ...state, isLoading: false, userToken: action.token };
+      return { ...prevState, isLoading: false, userToken: action.token };
     case "SIGN_IN":
-      return { ...state, isSignout: false, userToken: action.token };
+      return { ...prevState, isSignout: false, userToken: action.token };
     case "SIGN_OUT":
-      return { ...state, isSignout: true, userToken: null };
+      return { ...prevState, isSignout: true, userToken: null };
   }
 };
 
@@ -20,23 +29,23 @@ const AuthContext = React.createContext({});
 const AuthContextProvider = ({ children }) => {
   const [authState, dispatchAuth] = useReducer(authReducer, defaultAuthState);
 
-  // TODO: 카카오 소셜 연결하기...
   const kakaoSignIn = async () => {
     // 1. kakao login 요청하는 API 부분
+    const token = await login();
+    // 2. 서버에 토큰 전송하기
+    // axios.post();
 
-    // 2. kakao로부터 받은 웹뷰를 통해 서버에 토큰을 전송하고, 서버는 프론트에 고유한 토큰을 보내준다.
-
-    // 3. 여기서 token을 secure-storage에 저장한 다음, reducer(SIGN_IN)를 통해서 상태값을 바꿔준다.
-    let dummy = { id: 1 };
-    await SecureStore.setItemAsync("userToken", JSON.stringify(dummy));
-    dispatchAuth({ type: "SIGN_IN", token: { id: 3 } });
-    console.log("kakaoSignIn: 성공!");
+    // 3. 토큰을 secure-storage에 저장한 다음, reducer(SIGN_IN)를 통해서 상태값을 바꿔준다.
+    await SecureStore.setItemAsync("userToken", JSON.stringify(token));
+    dispatchAuth({ type: "SIGN_IN", token: token });
+    console.log("카카오_로그인 성공!");
   };
 
   const signOut = async () => {
+    await logout();
     await SecureStore.deleteItemAsync("userToken");
     dispatchAuth({ type: "SIGN_OUT" });
-    console.log("signOut: 성공!");
+    console.log("카카오_로그아웃 성공!");
   };
 
   const restoreToken = async () => {

@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 
+#import <RNKakaoLogins.h>
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -97,8 +98,14 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 // Linking API
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-  return [super application:application openURL:url options:options] || [RCTLinkingManager application:application openURL:url options:options];
+  if([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
+     return [RNKakaoLogins handleOpenUrl: url];
+  }else{
+    return [super application:application openURL:url options:options] || [RCTLinkingManager application:application openURL:url options:options];
+  }
+  return NO;
 }
+
 
 // Universal Links
 - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
@@ -162,5 +169,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 }
 
 #endif
+
+
 
 @end
