@@ -6,7 +6,7 @@ const TouchableOpacity = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 6px;
-  margin: 1.5px;
+  margin: 0px 4px;
   border-radius: 10px;
 `;
 

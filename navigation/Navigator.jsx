@@ -6,8 +6,6 @@ import LoginPage from "../screen/LoginPage";
 import { AuthContext } from "../context/AuthContextProvider";
 import ChatPage from "../screen/ChatPage";
 import ProfileEditPage from "../screen/ProfileEditPage";
-import { Button } from "react-native";
-import ProfileHeaderBtn from "../components/ProfileHeaderBtn";
 
 const Nav = createNativeStackNavigator();
 
@@ -50,7 +48,6 @@ const navigator = () => {
                 headerTitle: "프로필 수정",
                 headerShown: true,
                 headerTintColor: "#3772ff",
-                headerRight: () => <ProfileHeaderBtn />,
               }}
             />
           </Nav.Group>
