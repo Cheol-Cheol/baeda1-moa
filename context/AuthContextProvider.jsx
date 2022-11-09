@@ -90,6 +90,16 @@ const AuthContextProvider = ({ children }) => {
       .catch((e) => console.log("GetProfileErr: ", e.message));
   };
 
+  const editProfile = async (updatedName) => {
+    let data = { nickName: updatedName };
+    axios
+      .patch("http://3.37.106.173/api/users", data, {
+        headers: { Authorization: `Bearer ${authState.userToken}` },
+      })
+      .then(() => getProfile())
+      .catch((e) => console.log("EditProfileErr: ", e.message));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -98,6 +108,7 @@ const AuthContextProvider = ({ children }) => {
         kakaoSignOut,
         restoreToken,
         getProfile,
+        editProfile,
       }}
     >
       {children}
