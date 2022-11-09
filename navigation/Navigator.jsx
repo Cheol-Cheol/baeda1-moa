@@ -5,6 +5,9 @@ import Stack from "./Stack";
 import LoginPage from "../screen/LoginPage";
 import { AuthContext } from "../context/AuthContextProvider";
 import ChatPage from "../screen/ChatPage";
+import ProfileEditPage from "../screen/ProfileEditPage";
+import { Button } from "react-native";
+import ProfileHeaderBtn from "../components/ProfileHeaderBtn";
 
 const Nav = createNativeStackNavigator();
 
@@ -34,11 +37,23 @@ const navigator = () => {
             <Nav.Screen name="Tabs" component={Tabs} />
             <Nav.Screen name="Stack" component={Stack} />
           </Nav.Group>
-          <Nav.Screen
-            name="ChatPage"
-            component={ChatPage}
-            options={{ headerShown: true, headerTintColor: "#3772ff" }}
-          />
+          <Nav.Group>
+            <Nav.Screen
+              name="ChatPage"
+              component={ChatPage}
+              options={{ headerShown: true, headerTintColor: "#3772ff" }}
+            />
+            <Nav.Screen
+              name="ProfileEditPage"
+              component={ProfileEditPage}
+              options={{
+                headerTitle: "프로필 수정",
+                headerShown: true,
+                headerTintColor: "#3772ff",
+                headerRight: () => <ProfileHeaderBtn />,
+              }}
+            />
+          </Nav.Group>
         </>
       )}
     </Nav.Navigator>
