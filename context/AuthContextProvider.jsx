@@ -35,7 +35,7 @@ const AuthContextProvider = ({ children }) => {
     const token = await login();
     // 2. 서버에 토큰 전송하기
     // body: kakaoToken
-    await axios
+    axios
       .post("http://3.37.106.173/api/users", {
         kakaoToken: token.accessToken,
       })
@@ -46,6 +46,7 @@ const AuthContextProvider = ({ children }) => {
           JSON.stringify(response.headers.accesstoken)
         );
         dispatchAuth({ type: "SIGN_IN", token: response.headers.accesstoken });
+        console.log("카카오_로그인 성공!");
       })
       .catch(function (error) {
         console.log("KakaoLoginERR: ", error.response);
