@@ -19,9 +19,13 @@ const Loader = styled.View`
 
 const Container = styled.View`
   flex: 1;
-  justify-content: center;
-  align-items: center;
   background-color: ${({ theme }) => theme.bgColor};
+`;
+
+const Profile = styled.View`
+  flex: 0.4;
+  padding-horizontal: 15px;
+  justify-content: space-evenly;
 `;
 
 const Text = styled.Text`
@@ -57,29 +61,106 @@ const UserPage = () => {
         </Loader>
       ) : (
         <Container>
-          <View style={{ flex: 0.5 }}>
-            <Image
-              source={{ url: userInfo.image }}
-              style={{ width: 150, height: 150, borderRadius: 100 }}
-            />
-            <TextInput editable={false}>{userInfo.nickName}</TextInput>
+          <Profile>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <Image
+                source={{ url: userInfo.image }}
+                style={{ width: 80, height: 80, borderRadius: 100 }}
+              />
+
+              <View
+                style={{
+                  width: "20%",
+                  justifyContent: "center",
+                  alignItems: "flex-end",
+                }}
+              >
+                <Text style={{ fontSize: 19 }}>{userInfo.nickName}</Text>
+              </View>
+            </View>
+
             <TouchableOpacity
               onPress={goToProfileEditPage}
-              style={{ backgroundColor: "grey", width: "70%" }}
+              style={{
+                backgroundColor: "#729af7",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 9,
+                height: 30,
+              }}
             >
-              <Text>프로필 편집</Text>
+              <Text style={{ color: "white", fontWeight: "500" }}>
+                프로필 수정
+              </Text>
             </TouchableOpacity>
-          </View>
+          </Profile>
+
+          <View
+            style={{
+              height: 50,
+              backgroundColor: "#eee",
+            }}
+          />
 
           <TouchableOpacity
             onPress={kakaoSignOut}
-            style={{ backgroundColor: "yellow", width: "70%" }}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingVertical: 15,
+            }}
           >
-            <Text>로그아웃</Text>
+            <Text style={{ paddingHorizontal: 15, fontSize: 18 }}>
+              로 그 아 웃
+            </Text>
+            <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>＞</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ backgroundColor: "tomato", width: "70%" }}>
-            <Text>회원탈퇴</Text>
+
+          <View
+            style={{
+              height: 1,
+              backgroundColor: "#dedddd",
+            }}
+          />
+
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingVertical: 15,
+            }}
+          >
+            <Text
+              style={{
+                paddingHorizontal: 15,
+                fontSize: 18,
+                fontWeight: "500",
+                color: "tomato",
+              }}
+            >
+              회 원 탈 퇴
+            </Text>
+            <Text
+              style={{
+                paddingHorizontal: 15,
+                fontSize: 20,
+                fontWeight: "500",
+                color: "tomato",
+              }}
+            >
+              ＞
+            </Text>
           </TouchableOpacity>
+          <View
+            style={{
+              height: 1,
+              backgroundColor: "#dedddd",
+            }}
+          />
         </Container>
       )}
     </>
