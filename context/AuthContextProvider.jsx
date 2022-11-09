@@ -11,7 +11,12 @@ import {
   unlink,
 } from "@react-native-seoul/kakao-login";
 
-const defaultAuthState = { isLoading: true, isSignout: false, userToken: null };
+const defaultAuthState = {
+  isLoading: true,
+  isSignout: false,
+  userToken: null,
+  userInfo: {},
+};
 
 const authReducer = (prevState, action) => {
   switch (action.type) {
@@ -21,6 +26,8 @@ const authReducer = (prevState, action) => {
       return { ...prevState, isSignout: false, userToken: action.token };
     case "SIGN_OUT":
       return { ...prevState, isSignout: true, userToken: null };
+    case "PROFILE":
+      return { ...prevState, userInfo: action.info };
   }
 };
 
@@ -33,6 +40,7 @@ const AuthContextProvider = ({ children }) => {
   const kakaoSignIn = async () => {
     // 1. kakao login 요청하는 API 부분
     const token = await login();
+
     // 2. 서버에 토큰 전송하기
     // body: kakaoToken
     axios
@@ -70,14 +78,27 @@ const AuthContextProvider = ({ children }) => {
     dispatchAuth({ type: "RESTORE_TOKEN", token: userToken });
   };
 
-  // const getProfile = async () => {
-  //   const profile = await getKakaoProfile();
-  //   console.log(profile);
-  // };
+  const getProfile = async () => {
+    axios({
+      method: "get",
+      url: "http://3.37.106.173/api/users",
+      headers: { Authorization: `Bearer ${authState.userToken}` },
+    })
+      .then((response) =>
+        dispatchAuth({ type: "PROFILE", info: response.data })
+      )
+      .catch((e) => console.log("GetProfileErr: ", e.message));
+  };
 
   return (
     <AuthContext.Provider
-      value={{ authState, kakaoSignIn, kakaoSignOut, restoreToken }}
+      value={{
+        authState,
+        kakaoSignIn,
+        kakaoSignOut,
+        restoreToken,
+        getProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>
