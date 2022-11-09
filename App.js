@@ -10,6 +10,7 @@ import { darkTheme, lightTheme } from "./theme";
 import { useColorScheme } from "react-native";
 import { AuthContextProvider } from "./context/AuthContextProvider";
 import useCachedResources from "./hooks/useCachedResources";
+import { RoomsContextProvider } from "./context/RoomsContextProvider";
 
 export default function App() {
   const isDark = useColorScheme() === "dark";
@@ -19,9 +20,11 @@ export default function App() {
     return (
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <AuthContextProvider>
-          <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
-            <Navigator />
-          </NavigationContainer>
+          <RoomsContextProvider>
+            <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
+              <Navigator />
+            </NavigationContainer>
+          </RoomsContextProvider>
         </AuthContextProvider>
       </ThemeProvider>
     );

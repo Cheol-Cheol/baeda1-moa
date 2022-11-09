@@ -1,87 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 import List from "../components/List";
 import CategoryItem from "../components/CategoryItem";
 import { ActivityIndicator } from "react-native";
 import axios from "axios";
-
-const DUMMY_DATA = [
-  {
-    roomId: "1",
-    admin: "1de1dxz01011",
-    title: "밥 먹자 애들아!",
-    businessName: "청년피자",
-    orderTime: "2022년 11월 02일 오후 01시 51분",
-    category: "피자",
-  },
-  {
-    roomId: "2",
-    admin: "1de1dxz01012",
-    title: "족발 땡긴다!",
-    businessName: "대왕족발",
-    orderTime: "2022년 11월 02일 오후 05시 21분",
-    category: "족발보쌈",
-  },
-  {
-    roomId: "3",
-    admin: "1de1dxz01013",
-    title: "1/N 개이득!",
-    businessName: "명륜진사갈비",
-    orderTime: "2022년 11월 02일 오후 04시 21분",
-    category: "한식",
-  },
-  {
-    roomId: "4",
-    admin: "1de1dxz01013",
-    title: "1/N 개이득!",
-    businessName: "명륜진사갈비",
-    orderTime: "2022년 11월 02일 오후 04시 21분",
-    category: "한식",
-  },
-  {
-    roomId: "5",
-    admin: "1de1dxz01013",
-    title: "1/N 개이득!",
-    businessName: "명륜진사갈비",
-    orderTime: "2022년 11월 02일 오후 04시 21분",
-    category: "한식",
-  },
-  {
-    roomId: "6",
-    admin: "1de1dxz01013",
-    title: "1/N 개이득!",
-    businessName: "명륜진사갈비",
-    orderTime: "2022년 11월 02일 오후 04시 21분",
-    category: "한식",
-  },
-  {
-    roomId: "7",
-    admin: "1de1dxz01013",
-    title: "1/N 개이득!",
-    businessName: "명륜진사갈비",
-    orderTime: "2022년 11월 02일 오후 04시 21분",
-    category: "한식",
-  },
-  {
-    roomId: "8",
-    admin: "1de1dxz01013",
-    title: "1/N 개이득!",
-    businessName: "명륜진사갈비",
-    orderTime: "2022년 11월 02일 오후 04시 21분",
-    category: "한식",
-  },
-];
-
-// const CATEGORY = [
-//   { label: "전체", value: "전체" },
-//   { label: "한식", value: "한식" },
-//   { label: "중식", value: "중식" },
-//   { label: "일식", value: "일식" },
-//   { label: "분식", value: "분식" },
-//   { label: "피자", value: "피자" },
-//   { label: "족발/보쌈", value: "족발보쌈" },
-// ];
+import { RoomsContext } from "../context/RoomsContextProvider";
 
 const Loader = styled.View`
   flex: 1;
@@ -132,12 +56,12 @@ const HSeparator = styled.View`
 `;
 
 const HomePage = ({ navigation: { navigate } }) => {
-  // TODO: DUMMY_DATA 는 나중에 전역 state가 생성되면 바꿀 예정
-  const [rooms, setRooms] = useState(DUMMY_DATA);
+  const { roomsState } = useContext(RoomsContext);
   const [category, setCategory] = useState([{ categoryId: 0, name: "전체" }]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
+  // FIXME: 서버에서 Filter API 생성 시 삭제할 예정
   const onFilterRooms = (value) => {
     if (value !== "전체") {
       const filteredData = DUMMY_DATA.filter((room) => room.category === value);
@@ -173,6 +97,12 @@ const HomePage = ({ navigation: { navigate } }) => {
     // TODO: WritePage에서 생성 후 전역 state에 추가하고 dep에 설정해서 다시 전역 state을 갖고오도록 한다.
   }, []);
 
+  // TODO: 전역 state값이 바뀔 때 마다 dispatch READ를 할 것
+  useEffect(() => {
+    console.log("[HP] context state 변경!");
+    // dispatch({ type: READ });
+  }, [roomsState]);
+
   return (
     <Container>
       <Header>
@@ -197,7 +127,7 @@ const HomePage = ({ navigation: { navigate } }) => {
           </Category>
           <HSeparator />
           <FlatList
-            data={rooms}
+            data={roomsState}
             onRefresh={onRefresh}
             refreshing={refreshing}
             ItemSeparatorComponent={HSeparator}
