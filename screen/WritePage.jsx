@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
 import { Alert } from "react-native";
+import axios from "axios";
 
 Date.prototype.format = function (f) {
   if (!this.valueOf()) return " ";
@@ -119,6 +120,7 @@ const WritePage = ({ navigation: { goBack } }) => {
   const [enteredOrderTime, setEnteredOrderTime] = useState("");
   const [enteredCategory, setEnteredCategory] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [categoryFormat, setCategoryFormat] = useState([]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -138,7 +140,6 @@ const WritePage = ({ navigation: { goBack } }) => {
 
   const onChangeOrderTime = (date) => {
     // 📍 유효성 검사 해야됨. 오늘 날짜보다 이전 날짜 선택 시 다시 선택하라고 알려주기
-    // console.log("dateFormat: ", date.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
     hideDatePicker();
     setEnteredOrderTime(date.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
   };
@@ -148,9 +149,17 @@ const WritePage = ({ navigation: { goBack } }) => {
     setEnteredCategory(category);
   };
 
+  const formatedCategory = (data) => {
+    const formatedData = data.map((el) => {
+      return { label: el.name, value: el.name, key: el.categoryId };
+    });
+    setCategoryFormat(formatedData);
+  };
+
   const onSubmitHandler = async () => {
     // FIXME: react-hook-form 라이브러리로 폼 validation 가능하단 점 참고!
     // 1. 데이터 다 들어갔나 유효성 체크하기 (특히 category는 null아닌 지 확인!)
+    // 2. 중복 데이터 생성 시 예외 처리하기
     if (
       enteredTitle &&
       enteredBusinessName &&
@@ -171,6 +180,21 @@ const WritePage = ({ navigation: { goBack } }) => {
       return;
     }
   };
+
+  const getCategory = () => {
+    axios({
+      method: "get",
+      url: "http://3.37.106.173/api/categories",
+    })
+      .then(function (response) {
+        formatedCategory(response.data);
+      })
+      .catch((e) => console.log("[WP]getCategoryErr: ", e));
+  };
+
+  useEffect(() => {
+    getCategory();
+  }, []);
 
   return (
     <Container>
@@ -221,14 +245,7 @@ const WritePage = ({ navigation: { goBack } }) => {
             onValueChange={onChangeCategory}
             textInputProps={{ underlineColorAndroid: "transparent" }}
             fixAndroidTouchableBug={true}
-            items={[
-              { label: "한식", value: "한식" },
-              { label: "중식", value: "중식" },
-              { label: "일식", value: "일식" },
-              { label: "분식", value: "분식" },
-              { label: "피자", value: "피자" },
-              { label: "족발/보쌈", value: "족발보쌈" },
-            ]}
+            items={categoryFormat}
           />
         </CategoryPicker>
       </InputGroup>
