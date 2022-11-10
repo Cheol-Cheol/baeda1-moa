@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components/native";
 import ChatRoom from "../components/ChatRoom";
 import { RoomsContext } from "../context/RoomsContextProvider";
@@ -17,11 +17,16 @@ const HSeparator = styled.View`
 `;
 
 const ChatListPage = () => {
-  const { chatRoomsState } = useContext(RoomsContext);
+  const { roomsState, getMyRooms } = useContext(RoomsContext);
+
+  useEffect(() => {
+    getMyRooms();
+  }, []);
+
   return (
     <Container>
       <FlatList
-        data={chatRoomsState}
+        data={roomsState}
         ItemSeparatorComponent={HSeparator}
         keyExtractor={(item) => item.roomId}
         renderItem={({ item }) => <ChatRoom fullData={item} />}

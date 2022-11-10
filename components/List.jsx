@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Dimensions, Modal, Alert, Text } from "react-native";
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
+import { RoomsContext } from "../context/RoomsContextProvider";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -64,12 +65,14 @@ const BtnText = styled.Text`
 `;
 
 const List = ({ fullData }) => {
+  const { enterRoom } = useContext(RoomsContext);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
 
   const goToChatPage = () => {
     setModalVisible(!modalVisible);
     // TODO: 여기에 채팅방목록에 채팅방 추가하는 통신을 해야함
+    enterRoom(fullData.roomId);
     navigation.navigate("ChatPage", {
       params: { ...fullData },
     });
