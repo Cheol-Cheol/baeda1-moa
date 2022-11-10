@@ -339,6 +339,8 @@ PODS:
     - React-Core
   - RNDeviceInfo (8.4.5):
     - React-Core
+  - RNGestureHandler (2.8.0):
+    - React-Core
   - RNScreens (3.15.0):
     - React-Core
     - React-RCTImage
@@ -395,6 +397,7 @@ DEPENDENCIES:
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -502,6 +505,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -562,6 +567,7 @@ SPEC CHECKSUMS:
   RNCPicker: 0bf8ef8f7800524f32d2bb2a8bcadd53eda0ecd1
   RNDateTimePicker: 400fc87d26052d1ac76d05935e0f8d0fd4c78f13
   RNDeviceInfo: ec64a28e7ddf30399f34c04708fdf702560d083a
+  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNScreens: 4a1af06327774490d97342c00aee0c2bafb497b7
   RNSVG: 38ca962c970dbce1ca38991a5aebf26d163f9efb
   Yoga: 75bf4b0131cfb46a659cd0c13309b79a6fcff66d

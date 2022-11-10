@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
 import { Alert } from "react-native";
 import axios from "axios";
+import { RoomsContext } from "../context/RoomsContextProvider.jsx";
 
 Date.prototype.format = function (f) {
   if (!this.valueOf()) return " ";
@@ -118,9 +119,12 @@ const WritePage = ({ navigation: { goBack } }) => {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredBusinessName, setEnteredBusinessName] = useState("");
   const [enteredOrderTime, setEnteredOrderTime] = useState("");
-  const [enteredCategory, setEnteredCategory] = useState("");
+  const [dpOrderTime, setDpOrderTime] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [enteredCategory, setEnteredCategory] = useState("");
   const [categoryFormat, setCategoryFormat] = useState([]);
+
+  const { addRoom, getRooms } = useContext(RoomsContext);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -138,10 +142,17 @@ const WritePage = ({ navigation: { goBack } }) => {
     setEnteredBusinessName(businessName);
   };
 
-  const onChangeOrderTime = (date) => {
+  const onChangeOrderTime = (orderTime) => {
     // 📍 유효성 검사 해야됨. 오늘 날짜보다 이전 날짜 선택 시 다시 선택하라고 알려주기
     hideDatePicker();
-    setEnteredOrderTime(date.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
+
+    const date = new Date(orderTime);
+    const formatDate = new Date(+date + 3240 * 10000)
+      .toISOString()
+      .replace(/\..*/, "");
+
+    setDpOrderTime(orderTime.format("yyyy년 MM월 dd일 a/p hh시 mm분"));
+    setEnteredOrderTime(formatDate);
   };
 
   const onChangeCategory = (category) => {
@@ -151,8 +162,9 @@ const WritePage = ({ navigation: { goBack } }) => {
 
   const formatedCategory = (data) => {
     const formatedData = data.map((el) => {
-      return { label: el.name, value: el.name, key: el.categoryId };
+      return { label: el.name, value: el.categoryId, key: el.categoryId };
     });
+
     setCategoryFormat(formatedData);
   };
 
@@ -167,13 +179,12 @@ const WritePage = ({ navigation: { goBack } }) => {
       enteredCategory
     ) {
       const data = {
-        roomid: Date.now(),
-        admin: "",
         title: enteredTitle,
-        businessName: enteredBusinessName,
-        orderTime: enteredOrderTime,
-        category: enteredCategory,
+        restaurantName: enteredBusinessName,
+        orderDate: enteredOrderTime,
+        categoryId: enteredCategory,
       };
+      addRoom(data);
       goBack();
     } else {
       Alert.alert("모든 값을 입력해주세요.");
@@ -226,7 +237,7 @@ const WritePage = ({ navigation: { goBack } }) => {
             placeholder="주문시간을 입력해주세요"
             underlineColorAndroid="transparent"
             editable={false}
-            value={enteredOrderTime}
+            value={dpOrderTime}
           />
           <DateTimePickerModal
             headerTextIOS="주문시간을 입력해주세요"

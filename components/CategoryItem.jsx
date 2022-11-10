@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components/native";
+import { RoomsContext } from "../context/RoomsContextProvider";
 
 const TouchableOpacity = styled.TouchableOpacity`
   background-color: #9bb6f7;
@@ -12,9 +13,10 @@ const TouchableOpacity = styled.TouchableOpacity`
 
 const Text = styled.Text``;
 
-const CategoryItem = ({ value, name, onFilterRooms }) => {
+const CategoryItem = ({ name, categoryId }) => {
+  const { filterRooms } = useContext(RoomsContext);
   return (
-    <TouchableOpacity onPress={() => onFilterRooms(value)}>
+    <TouchableOpacity onPress={() => filterRooms(categoryId)}>
       <Text>{name}</Text>
     </TouchableOpacity>
   );

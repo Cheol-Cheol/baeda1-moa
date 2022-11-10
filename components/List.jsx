@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dimensions, Modal, Alert } from "react-native";
+import { Dimensions, Modal, Alert, Text } from "react-native";
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -118,10 +118,13 @@ const List = ({ fullData }) => {
 
       <ListContainer onPress={() => setModalVisible(!modalVisible)}>
         <ListContent style={{ width: SCREEN_WIDTH / 1.5 }}>
-          <Title>{fullData.title}</Title>
           <RowView>
-            <TextLeft>{fullData.businessName}</TextLeft>
-            <TextRight>{fullData.orderTime.substring(14)}</TextRight>
+            <Title>{fullData.title}</Title>
+            <Text>인원: {fullData.userCount}</Text>
+          </RowView>
+          <RowView>
+            <TextLeft>{fullData.restaurantName}</TextLeft>
+            <TextRight>{fullData.orderDate}</TextRight>
           </RowView>
         </ListContent>
       </ListContainer>

@@ -56,27 +56,15 @@ const HSeparator = styled.View`
 `;
 
 const HomePage = ({ navigation: { navigate } }) => {
-  const { roomsState } = useContext(RoomsContext);
+  const { roomsState, getRooms } = useContext(RoomsContext);
   const [category, setCategory] = useState([{ categoryId: 0, name: "전체" }]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // FIXME: 서버에서 Filter API 생성 시 삭제할 예정
-  const onFilterRooms = (value) => {
-    if (value !== "전체") {
-      const filteredData = DUMMY_DATA.filter((room) => room.category === value);
-      setRooms(filteredData);
-    } else {
-      setRooms(DUMMY_DATA);
-    }
-  };
-
   const onRefresh = async () => {
     setRefreshing(true);
-    // 1. 새로고침 시 api GET 통신
-    setTimeout(() => setRefreshing(false), 1000);
-    // 2. setRooms(res.data);
-    // 3. setRefreshing(false);
+    getRooms();
+    setTimeout(() => setRefreshing(false), 900);
   };
 
   const getCategory = () => {
@@ -92,16 +80,18 @@ const HomePage = ({ navigation: { navigate } }) => {
     setLoading(false);
   };
 
+  const getInitData = async () => {
+    Promise.all([getCategory(), getRooms()]);
+  };
+
   useEffect(() => {
-    getCategory();
-    // TODO: WritePage에서 생성 후 전역 state에 추가하고 dep에 설정해서 다시 전역 state을 갖고오도록 한다.
+    getInitData();
   }, []);
 
-  // TODO: 전역 state값이 바뀔 때 마다 dispatch READ를 할 것
-  useEffect(() => {
-    console.log("[HP] context state 변경!");
-    // dispatch({ type: READ });
-  }, [roomsState]);
+  // FIXME: 무한 호출 발생...
+  // useEffect(() => {
+  //   getRooms();
+  // }, [roomsState]);
 
   return (
     <Container>
@@ -121,7 +111,7 @@ const HomePage = ({ navigation: { navigate } }) => {
               <CategoryItem
                 key={index}
                 name={el.name}
-                onFilterRooms={onFilterRooms}
+                categoryId={el.categoryId}
               />
             ))}
           </Category>
