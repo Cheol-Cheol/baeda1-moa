@@ -1,12 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, Image, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { AuthContext } from "../context/AuthContextProvider";
 
@@ -39,6 +33,7 @@ const UserPage = () => {
     authState: { userInfo },
     kakaoSignOut,
     getProfile,
+    retireUser,
   } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
 
@@ -128,6 +123,7 @@ const UserPage = () => {
           />
 
           <TouchableOpacity
+            onPress={retireUser}
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
