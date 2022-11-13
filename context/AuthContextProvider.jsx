@@ -40,7 +40,6 @@ const AuthContextProvider = ({ children }) => {
   const kakaoSignIn = async () => {
     // 1. kakao login 요청하는 API 부분
     const token = await login();
-
     // 2. 서버에 토큰 전송하기
     // body: kakaoToken
     axios
@@ -51,7 +50,7 @@ const AuthContextProvider = ({ children }) => {
         // 3. 토큰을 secure-storage에 저장한 다음, reducer(SIGN_IN)를 통해서 상태값을 바꿔준다.
         await SecureStore.setItemAsync(
           "userToken",
-          JSON.stringify(response.headers.accesstoken)
+          response.headers.accesstoken
         );
         dispatchAuth({ type: "SIGN_IN", token: response.headers.accesstoken });
         console.log("카카오_로그인 성공!");
@@ -63,6 +62,7 @@ const AuthContextProvider = ({ children }) => {
 
   const kakaoSignOut = async () => {
     const message = await logout();
+    console.log("로그아웃: ", message);
     await SecureStore.deleteItemAsync("userToken");
     dispatchAuth({ type: "SIGN_OUT" });
     console.log(`카카오_로그아웃 성공! (MSG: ${message})`);
@@ -100,6 +100,19 @@ const AuthContextProvider = ({ children }) => {
       .catch((e) => console.log("EditProfileErr: ", e.message));
   };
 
+  const retireUser = async () => {
+    axios
+      .delete("http://3.37.106.173/api/users", {
+        headers: { Authorization: `Bearer ${authState.userToken}` },
+      })
+      .then(async () => {
+        await SecureStore.deleteItemAsync("userToken");
+        dispatchAuth({ type: "SIGN_OUT" });
+        console.log("회원탈퇴 성공!");
+      })
+      .catch((e) => console.log("RetireUserErr: ", e.message));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -109,6 +122,7 @@ const AuthContextProvider = ({ children }) => {
         restoreToken,
         getProfile,
         editProfile,
+        retireUser,
       }}
     >
       {children}
