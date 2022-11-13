@@ -1,11 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import styled from "styled-components/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View } from "react-native";
 
 const ListContainer = styled.TouchableOpacity`
   padding: 15px 17px;
   border: 1px solid #eee;
   border-radius: 20px;
+  margin-vertical: 5px;
 `;
 
 const RowView = styled.View`
@@ -31,7 +34,7 @@ const Dialog = styled.Text`
   color: grey;
 `;
 
-const ChatRoom = ({ fullData, fullData: { title, time, dialog } }) => {
+const ChatRoom = ({ fullData, fullData: { title, master } }) => {
   const navigation = useNavigation();
 
   const goToChatPage = () => {
@@ -42,14 +45,25 @@ const ChatRoom = ({ fullData, fullData: { title, time, dialog } }) => {
 
   return (
     <ListContainer onPress={goToChatPage}>
+      <View style={{ position: "absolute", left: -3, top: -7 }}>
+        {master ? (
+          <MaterialCommunityIcons
+            name="crown-circle"
+            size={24}
+            color="#f9d55d"
+          />
+        ) : null}
+      </View>
+
       <RowView>
         <Title>{title}</Title>
-        <TimeView>
+        {/* <TimeView>
           <Time>{time}</Time>
-        </TimeView>
+        </TimeView> */}
       </RowView>
       <DialogView>
-        <Dialog>{dialog}</Dialog>
+        {/* <Dialog>{dialog}</Dialog> */}
+        <Dialog>안녕ㅋㅋ</Dialog>
       </DialogView>
     </ListContainer>
   );
