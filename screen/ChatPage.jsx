@@ -1,24 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { getUniqueId } from "react-native-device-info";
-import { Text, View } from "react-native";
+import React, { useContext, useEffect } from "react";
+import { Button, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import styled from "styled-components/native";
+import { RoomsContext } from "../context/RoomsContextProvider";
 
-// Device ID
-let userId = getUniqueId();
+const ChatPage = ({
+  navigation: { setOptions, goBack },
+  route: { params },
+}) => {
+  const { leaveRoom, deleteRoom } = useContext(RoomsContext);
+  const chatData = params.params;
+  // TODO: SockJS 코드 넣어야 함
 
-// TODO: 여기서는 왜 params.params로 데이터를 추출해야 하는지 파악해야 함
-const ChatPage = ({ navigation: { setOptions }, route: { params } }) => {
-  // 서버의 상태를 저장
-  const [serverState, setServerState] = useState("loading...");
-  // 인풋창에 입력되는 메세지의 상태를 저장
-  const [messageText, setMessageText] = useState("");
-  // 서버에서 받아온 메세지들의 상태를 저장
-  const [serverMessages, setServerMessages] = useState([]);
-  const serverMessagesList = [];
+  const leaveRoomGoToChatListPage = async (roomId) => {
+    await leaveRoom(roomId);
+    goBack();
+  };
+  // TODO: 이거 두 개 함수 묶을 것!
+  const deleteRoomGoToChatListPage = async (roomId) => {
+    await deleteRoom(roomId);
+    goBack();
+  };
 
   useEffect(() => {
-    setOptions({ title: params.params.title });
-  }, []);
-  // TODO: 서버와 연결 후, useEffect로 params를 통해 받은 정보를 가지고 API를 호출해서 채팅방 데이터를 가져온다.
+    // FIXME: 여기서는 왜 params.params로 데이터를 추출해야 하는지 파악해야 함
+    if (chatData.master) {
+      setOptions({
+        title: params.params.title,
+        headerRight: () => (
+          <>
+            <TouchableOpacity style={{ marginRight: 5 }}>
+              <Feather name="edit" size={22} color="black" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => deleteRoomGoToChatListPage(params.params.roomId)}
+            >
+              <Feather name="log-out" size={22} color="black" />
+            </TouchableOpacity>
+          </>
+        ),
+      });
+    } else {
+      setOptions({
+        title: params.params.title,
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => leaveRoomGoToChatListPage(params.params.roomId)}
+          >
+            <Feather name="log-out" size={24} color="black" />
+          </TouchableOpacity>
+        ),
+      });
+    }
+  }, [
+    chatData.isMaster,
+    params.params,
+    deleteRoomGoToChatListPage,
+    leaveRoomGoToChatListPage,
+  ]);
 
   return;
 };

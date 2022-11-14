@@ -104,13 +104,26 @@ const RoomsContextProvider = ({ children }) => {
     // 1. Axios PUT
     dispatchRooms({ type: CREATE });
   };
+  // 나가기 - api/rooms/7/users
+  // 탈퇴 - api/rooms/7
 
-  const deleteRoom = async () => {
-    // 1. Axios DELETE
-    dispatchRooms({ type: CREATE });
+  // 📍 TODO: dispatch 값 없는 애들 설정해줘야 댐
+  const deleteRoom = async (roomId) => {
+    axios
+      .delete(`http://3.37.106.173/api/rooms/${roomId}`, {
+        headers: { Authorization: `Bearer ${authState.userToken}` },
+      })
+      .catch((e) => console.log("deleteRoomErr: ", e.message));
+    // dispatchRooms({ type: CREATE });
   };
 
-  const leaveRoom = async () => {};
+  const leaveRoom = async (roomId) => {
+    axios
+      .delete(`http://3.37.106.173/api/rooms/${roomId}/users`, {
+        headers: { Authorization: `Bearer ${authState.userToken}` },
+      })
+      .catch((e) => console.log("LeaveRoomERr: ", e.message));
+  };
 
   return (
     <RoomsContext.Provider
