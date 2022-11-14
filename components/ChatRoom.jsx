@@ -34,7 +34,7 @@ const Dialog = styled.Text`
   color: grey;
 `;
 
-const ChatRoom = ({ fullData, fullData: { title, master } }) => {
+const ChatRoom = ({ fullData }) => {
   const navigation = useNavigation();
 
   const goToChatPage = () => {
@@ -46,7 +46,7 @@ const ChatRoom = ({ fullData, fullData: { title, master } }) => {
   return (
     <ListContainer onPress={goToChatPage}>
       <View style={{ position: "absolute", left: -3, top: -7 }}>
-        {master ? (
+        {fullData.master ? (
           <MaterialCommunityIcons
             name="crown-circle"
             size={24}
@@ -56,7 +56,7 @@ const ChatRoom = ({ fullData, fullData: { title, master } }) => {
       </View>
 
       <RowView>
-        <Title>{title}</Title>
+        <Title>{fullData.title}</Title>
         {/* <TimeView>
           <Time>{time}</Time>
         </TimeView> */}

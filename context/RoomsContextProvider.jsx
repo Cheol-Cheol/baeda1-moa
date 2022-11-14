@@ -104,8 +104,6 @@ const RoomsContextProvider = ({ children }) => {
     // 1. Axios PUT
     dispatchRooms({ type: CREATE });
   };
-  // 나가기 - api/rooms/7/users
-  // 탈퇴 - api/rooms/7
 
   // 📍 TODO: dispatch 값 없는 애들 설정해줘야 댐
   const deleteRoom = async (roomId) => {

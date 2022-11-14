@@ -123,7 +123,7 @@ const List = ({ fullData }) => {
         <ListContent style={{ width: SCREEN_WIDTH / 1.5 }}>
           <RowView>
             <Title>{fullData.title}</Title>
-            <Text>인원: {fullData.userCount}</Text>
+            <Text>인원: {fullData.userCount}/5</Text>
           </RowView>
           <RowView>
             <TextLeft>{fullData.restaurantName}</TextLeft>
