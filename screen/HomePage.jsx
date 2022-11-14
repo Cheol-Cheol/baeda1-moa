@@ -6,6 +6,7 @@ import CategoryItem from "../components/CategoryItem";
 import { ActivityIndicator } from "react-native";
 import axios from "axios";
 import { RoomsContext } from "../context/RoomsContextProvider";
+import { AuthContext } from "../context/AuthContextProvider";
 
 const Loader = styled.View`
   flex: 1;
@@ -57,6 +58,7 @@ const HSeparator = styled.View`
 
 const HomePage = ({ navigation: { navigate } }) => {
   const { roomsState, getRooms } = useContext(RoomsContext);
+  const { getProfile } = useContext(AuthContext);
   const [category, setCategory] = useState([{ categoryId: 0, name: "전체" }]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -81,7 +83,7 @@ const HomePage = ({ navigation: { navigate } }) => {
   };
 
   const getInitData = async () => {
-    Promise.all([getCategory(), getRooms()]);
+    Promise.all([getCategory(), getRooms(), getProfile()]);
   };
 
   useEffect(() => {

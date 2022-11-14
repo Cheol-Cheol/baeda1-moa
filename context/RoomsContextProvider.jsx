@@ -58,6 +58,7 @@ const RoomsContextProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${authState.userToken}` },
       })
       .then((response) => {
+        // FIXME: READ로 가져오면 이전에 있던 state가 처음에 렌더링되니, 새로운 type을 생성하자.
         dispatchRooms({ type: "READ", value: response.data });
       })
       .catch((e) => console.log("getRoomErr: ", e.message));

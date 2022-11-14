@@ -11,6 +11,7 @@ import { useColorScheme } from "react-native";
 import { AuthContextProvider } from "./context/AuthContextProvider";
 import useCachedResources from "./hooks/useCachedResources";
 import { RoomsContextProvider } from "./context/RoomsContextProvider";
+import * as encoding from "text-encoding";
 
 export default function App() {
   const isDark = useColorScheme() === "dark";
