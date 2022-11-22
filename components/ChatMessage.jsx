@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import styled from "styled-components/native";
 import { AuthContext } from "../context/AuthContextProvider";
 
-// FIXME: MyChat Style
+// 📌 MyChat Style
 const MyChatContainer = styled.View`
   flex-direction: row;
   align-items: flex-end;
@@ -36,7 +36,7 @@ const Text = styled.Text`
   color: ${({ color }) => (!color ? "black" : color)};
 `;
 
-// FIXME: OtherChat Style
+// 📌 OtherChat Style
 const OtherChatContainer = styled.View`
   align-self: flex-start;
   margin: 7px 7px;
