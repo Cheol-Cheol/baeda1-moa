@@ -7,7 +7,7 @@ const BtnContainer = styled.View`
 `;
 
 const Btn = styled.TouchableOpacity`
-  margin: 2px;
+  margin: 3px;
 `;
 
 const DeleteRoomBtn = ({ roomId, deleteRoomGoToChatListPage }) => {
