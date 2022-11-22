@@ -20,7 +20,7 @@ Date.prototype.format = function (f) {
   ];
   var d = this;
 
-  return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function ($1) {
+  return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p|am\/pm)/gi, function ($1) {
     switch ($1) {
       case "yyyy":
         return d.getFullYear();
@@ -42,6 +42,8 @@ Date.prototype.format = function (f) {
         return d.getSeconds().zf(2);
       case "a/p":
         return d.getHours() < 12 ? "오전" : "오후";
+      case "am/pm":
+        return d.getHours() < 12 ? "AM" : "PM";
       default:
         return $1;
     }
