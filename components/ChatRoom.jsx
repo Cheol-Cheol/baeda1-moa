@@ -3,12 +3,13 @@ import React from "react";
 import styled from "styled-components/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
+import MasterIcon from "./UI/MasterIcon";
 
 const ListContainer = styled.TouchableOpacity`
   padding: 15px 17px;
   border: 1px solid #eee;
   border-radius: 20px;
-  margin-vertical: 5px;
+  margin: 5px 0px;
 `;
 
 const RowView = styled.View`
@@ -45,15 +46,7 @@ const ChatRoom = ({ fullData }) => {
 
   return (
     <ListContainer onPress={goToChatPage}>
-      <View style={{ position: "absolute", left: -3, top: -7 }}>
-        {fullData.master ? (
-          <MaterialCommunityIcons
-            name="crown-circle"
-            size={24}
-            color="#f9d55d"
-          />
-        ) : null}
-      </View>
+      {fullData.master ? <MasterIcon /> : null}
 
       <RowView>
         <Title>{fullData.title}</Title>

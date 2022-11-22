@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 import LogoImage from "../assets/images/logo.svg";

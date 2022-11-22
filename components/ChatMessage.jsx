@@ -64,7 +64,7 @@ const ChatMessage = ({ item, formatDate }) => {
     authState: { userInfo },
   } = useContext(AuthContext);
 
-  return item.userId !== userInfo.userId ? (
+  return item.userId === userInfo.userId ? (
     <MyChatContainer>
       <MarginView>
         <CreatedAt>{formatDate(item.createdAt)}</CreatedAt>
