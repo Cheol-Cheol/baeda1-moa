@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
-import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { AuthContext } from "../context/AuthContextProvider";
 import { useNavigation } from "@react-navigation/native";
 
@@ -8,6 +7,46 @@ const Container = styled.View`
   flex: 1;
   padding: 15px;
   background-color: ${({ theme }) => theme.bgColor};
+`;
+
+const FormContainer = styled.View`
+  flex: 0.25;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  justify-content: space-between;
+`;
+
+const Form = styled.View``;
+
+const Label = styled.Text`
+  font-size: 16px;
+  margin: 10px 0px;
+  font-weight: 500;
+  padding-left: 4px;
+`;
+
+const TextInput = styled.TextInput`
+  padding: 15px;
+  border: 0.5px solid grey;
+  border-radius: 10px;
+  background-color: white;
+  font-size: 20px;
+`;
+
+const Btn = styled.TouchableOpacity`
+  background-color: tomato;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 12px;
+`;
+
+const BtnText = styled.Text`
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
 `;
 
 const ProfileEditPage = ({ route: { params } }) => {
@@ -27,56 +66,15 @@ const ProfileEditPage = ({ route: { params } }) => {
 
   return (
     <Container>
-      <View
-        style={{
-          flex: 0.25,
-          marginTop: 10,
-          padding: 10,
-          borderRadius: 10,
-          justifyContent: "space-between",
-        }}
-      >
-        <View>
-          <Text
-            style={{
-              fontSize: 16,
-              marginVertical: 10,
-              fontWeight: "500",
-              paddingLeft: 4,
-            }}
-          >
-            닉네임
-          </Text>
-          <TextInput
-            value={enteredName}
-            onChangeText={onChangeHandler}
-            style={{
-              padding: 15,
-              borderColor: "grey",
-              backgroundColor: "white",
-              borderWidth: 0.5,
-              borderRadius: 10,
-              fontSize: 20,
-            }}
-          />
-        </View>
-
-        <TouchableOpacity
-          onPress={() => updatedName(enteredName)}
-          style={{
-            backgroundColor: "tomato",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 12,
-            borderRadius: 10,
-            marginTop: 12,
-          }}
-        >
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "500" }}>
-            완료
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <FormContainer>
+        <Form>
+          <Label>닉네임</Label>
+          <TextInput value={enteredName} onChangeText={onChangeHandler} />
+        </Form>
+        <Btn onPress={() => updatedName(enteredName)}>
+          <BtnText>완료</BtnText>
+        </Btn>
+      </FormContainer>
     </Container>
   );
 };

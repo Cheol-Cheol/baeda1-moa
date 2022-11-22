@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Image, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator } from "react-native";
 import styled from "styled-components/native";
 import { AuthContext } from "../context/AuthContextProvider";
 
@@ -18,15 +18,62 @@ const Container = styled.View`
 
 const Profile = styled.View`
   flex: 0.4;
-  padding-horizontal: 15px;
+  padding: 0px 15px;
   justify-content: space-evenly;
 `;
 
-const Text = styled.Text`
-  color: ${({ theme }) => theme.textColor};
+const RowView = styled.View`
+  flex-direction: row;
 `;
 
-// TODO: 재빌드 시 프로필 렌더링 실패
+const ProfileImage = styled.Image`
+  width: 80px;
+  height: 80px;
+  border-radius: 100px;
+`;
+
+const FlexEndView = styled.View`
+  width: 20%;
+  justify-content: center;
+  align-items: flex-end;
+`;
+
+const NickName = styled.Text`
+  font-size: 19px;
+`;
+
+const ProfileEditBtn = styled.TouchableOpacity`
+  background-color: #729af7;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  height: 30px;
+`;
+
+const BtnText = styled.Text`
+  color: white;
+  font-weight: 500;
+`;
+
+const BgView = styled.View`
+  height: 50px;
+  background-color: #eee;
+`;
+
+const BtnCell = styled.TouchableOpacity`
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 15px 0px;
+  border: 1px solid #eee;
+  align-items: center;
+`;
+
+const BtnCellText = styled.Text`
+  padding: 0px 15px;
+  font-size: 18px;
+  color: ${({ color }) => (!color ? "black" : color)};
+`;
+
 const UserPage = () => {
   const navigation = useNavigation();
   const {
@@ -57,106 +104,26 @@ const UserPage = () => {
       ) : (
         <Container>
           <Profile>
-            <View
-              style={{
-                flexDirection: "row",
-              }}
-            >
-              <Image
-                source={{ url: userInfo.image }}
-                style={{ width: 80, height: 80, borderRadius: 100 }}
-              />
-
-              <View
-                style={{
-                  width: "20%",
-                  justifyContent: "center",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Text style={{ fontSize: 19 }}>{userInfo.nickName}</Text>
-              </View>
-            </View>
-
-            <TouchableOpacity
-              onPress={goToProfileEditPage}
-              style={{
-                backgroundColor: "#729af7",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 9,
-                height: 30,
-              }}
-            >
-              <Text style={{ color: "white", fontWeight: "500" }}>
-                프로필 수정
-              </Text>
-            </TouchableOpacity>
+            <RowView>
+              <ProfileImage source={{ url: userInfo.image }} />
+              <FlexEndView>
+                <NickName>{userInfo.nickName}</NickName>
+              </FlexEndView>
+            </RowView>
+            <ProfileEditBtn onPress={goToProfileEditPage}>
+              <BtnText>프로필 수정</BtnText>
+            </ProfileEditBtn>
           </Profile>
+          <BgView />
+          <BtnCell onPress={kakaoSignOut}>
+            <BtnCellText>로 그 아 웃</BtnCellText>
+            <BtnCellText>＞</BtnCellText>
+          </BtnCell>
 
-          <View
-            style={{
-              height: 50,
-              backgroundColor: "#eee",
-            }}
-          />
-
-          <TouchableOpacity
-            onPress={kakaoSignOut}
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingVertical: 15,
-            }}
-          >
-            <Text style={{ paddingHorizontal: 15, fontSize: 18 }}>
-              로 그 아 웃
-            </Text>
-            <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>＞</Text>
-          </TouchableOpacity>
-
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "#dedddd",
-            }}
-          />
-
-          <TouchableOpacity
-            onPress={retireUser}
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingVertical: 15,
-            }}
-          >
-            <Text
-              style={{
-                paddingHorizontal: 15,
-                fontSize: 18,
-                fontWeight: "500",
-                color: "tomato",
-              }}
-            >
-              회 원 탈 퇴
-            </Text>
-            <Text
-              style={{
-                paddingHorizontal: 15,
-                fontSize: 20,
-                fontWeight: "500",
-                color: "tomato",
-              }}
-            >
-              ＞
-            </Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "#dedddd",
-            }}
-          />
+          <BtnCell onPress={retireUser}>
+            <BtnCellText color="tomato">회 원 탈 퇴</BtnCellText>
+            <BtnCellText color="tomato">＞</BtnCellText>
+          </BtnCell>
         </Container>
       )}
     </>
