@@ -3,11 +3,11 @@ import styled from "styled-components/native";
 import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { FlatList, TextInput, TouchableOpacity, View } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { RoomsContext } from "../context/RoomsContextProvider";
 import { AuthContext } from "../context/AuthContextProvider";
 import ChatMessage from "../components/ChatMessage";
+import DeleteRoomBtn from "../components/DeleteRoomBtn";
+import LeaveRoomBtn from "../components/LeaveRoomBtn";
 
 // chatData: {"master": false, "orderDate": "2022-11-11T00:11:20", "restaurantName": "좐", "roomId": 29, "title": "좌니방", "userCount": 2}
 // userInfo: {"image": "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg", "nickName": "황철원2", "userId": 3}
@@ -83,11 +83,12 @@ const ChatInfo = styled.View`
   border: 1px solid #4c80fa;
   border-radius: 20px;
   padding: 10px 25px;
+  background-color: #d1dcf6;
 `;
 
 const Text = styled.Text``;
 
-const TextColorTomato = styled.Text`
+const OrderDate = styled.Text`
   color: tomato;
   font-weight: 700;
 `;
@@ -101,6 +102,27 @@ const ChatMessageList = styled.FlatList`
   padding: 10px 20px 0px 20px;
 `;
 
+const Keyboard = styled.View`
+  flex-direction: row;
+  background-color: #ffffff;
+`;
+
+const TextInput = styled.TextInput`
+  flex: 0.9;
+  margin: 5px 0px 40px 8px;
+  padding: 8px;
+  border: 0.5px solid grey;
+  border-radius: 10px;
+  background-color: white;
+`;
+
+const SendBtn = styled.TouchableOpacity`
+  flex: 0.1;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 9px;
+`;
+
 const ChatPage = ({
   navigation: { setOptions, goBack },
   route: { params },
@@ -112,7 +134,7 @@ const ChatPage = ({
   const chatData = params.params;
 
   const client = useRef({});
-  // TODO: chatMessages로 상태관리중인데, 비효율적이니 useQuery를 적용하자.
+  // TODO: chatMessages로 상태관리중인데, 무한스크롤도 할 겸 비효율적이니 useQuery를 적용하자.
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -175,40 +197,31 @@ const ChatPage = ({
     await leaveRoom(roomId);
     goBack();
   };
-  // TODO: 이거 두 개 함수 묶을 것!
+
   const deleteRoomGoToChatListPage = async (roomId) => {
     await deleteRoom(roomId);
     goBack();
   };
 
   useEffect(() => {
-    // FIXME: 여기서는 왜 params.params로 데이터를 추출해야 하는지 파악해야 함
     if (chatData.master) {
       setOptions({
         title: params.params.title,
         headerRight: () => (
-          <>
-            <TouchableOpacity style={{ marginRight: 5 }}>
-              <Feather name="edit" size={22} color="black" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => deleteRoomGoToChatListPage(params.params.roomId)}
-            >
-              <Feather name="log-out" size={22} color="black" />
-            </TouchableOpacity>
-          </>
+          <DeleteRoomBtn
+            deleteRoomGoToChatListPage={deleteRoomGoToChatListPage}
+            roomId={params.params.roomId}
+          />
         ),
       });
     } else {
       setOptions({
         title: params.params.title,
         headerRight: () => (
-          <TouchableOpacity
-            onPress={() => leaveRoomGoToChatListPage(params.params.roomId)}
-          >
-            <Feather name="log-out" size={24} color="black" />
-          </TouchableOpacity>
+          <LeaveRoomBtn
+            leaveRoomGoToChatListPage={leaveRoomGoToChatListPage}
+            roomId={params.params.roomId}
+          />
         ),
       });
     }
@@ -231,13 +244,11 @@ const ChatPage = ({
         <ChatInfo>
           <Text>방 제목: {chatData.title}</Text>
           <Text>상 호 명: {chatData.restaurantName}</Text>
-          <TextColorTomato>
-            주 문 시 간: {formatDate(chatData.orderDate)}
-          </TextColorTomato>
+          <OrderDate>주 문 시 간: {formatDate(chatData.orderDate)}</OrderDate>
         </ChatInfo>
 
+        {/* chatMessages: [{"content": "Aaa", "createdAt": "2022-11-21T11:24:29", "nickName": "황철원", "roomId": 32, "userId": 3}] */}
         <KeyboardAvoidingView behavior={"padding"} keyboardVerticalOffset={55}>
-          {/* chatMessages: [{"content": "Aaa", "createdAt": "2022-11-21T11:24:29", "nickName": "황철원", "roomId": 32, "userId": 3}] */}
           <ChatMessageList
             data={chatMessages}
             keyExtractor={(item, index) => index}
@@ -245,39 +256,12 @@ const ChatPage = ({
               <ChatMessage item={item} formatDate={formatDate} />
             )}
           />
-          <View
-            style={{
-              flexDirection: "row",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <TextInput
-              onChangeText={onChangeHandler}
-              value={message}
-              style={{
-                flex: 0.9,
-                marginTop: 5,
-                marginLeft: 8,
-                padding: 8,
-                borderColor: "grey",
-                backgroundColor: "white",
-                borderWidth: 0.5,
-                borderRadius: 10,
-                marginBottom: 40,
-              }}
-            />
-            <TouchableOpacity
-              onPress={sendMsg}
-              style={{
-                flex: 0.1,
-                justifyContent: "flex-start",
-                alignItems: "center",
-                paddingTop: 9,
-              }}
-            >
+          <Keyboard>
+            <TextInput onChangeText={onChangeHandler} value={message} />
+            <SendBtn onPress={sendMsg}>
               <FontAwesome5 name="arrow-circle-up" size={24} color="#4c80fa" />
-            </TouchableOpacity>
-          </View>
+            </SendBtn>
+          </Keyboard>
         </KeyboardAvoidingView>
       </ChatContainer>
     </>
