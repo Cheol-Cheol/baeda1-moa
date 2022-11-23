@@ -21,14 +21,16 @@ const roomsReducer = (prevState, action) => {
   }
 };
 
-const chatRoomsReducer = (prevState, action) => {
+const defaultChatMsgState = [];
+
+const chatMsgReducer = (prevState, action) => {
   switch (action.type) {
-    case UPDATE:
-      return;
-    case DELETE:
-      return;
-    case LEAVE:
-      return;
+    case "INIT":
+      return [];
+    case "GET":
+      return [...action.value];
+    case "ADD":
+      return [action.value, ...prevState];
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -40,6 +42,11 @@ const RoomsContextProvider = ({ children }) => {
   const [roomsState, dispatchRooms] = useReducer(
     roomsReducer,
     defaultRoomsState
+  );
+
+  const [chatMsgState, dispatchChatMsg] = useReducer(
+    chatMsgReducer,
+    defaultChatMsgState
   );
 
   const { authState } = useContext(AuthContext);
@@ -124,6 +131,25 @@ const RoomsContextProvider = ({ children }) => {
       .catch((e) => console.log("LeaveRoomERr: ", e.message));
   };
 
+  const getChatMessage = async (roomId, size) => {
+    const presentTime = new Date();
+    const formatDate = new Date(+presentTime + 3240 * 10000)
+      .toISOString()
+      .replace(/\..*/, "");
+
+    await axios
+      .get(
+        `http://3.37.106.173:8081/api/rooms/${roomId}/messages?lastMessageDate=${formatDate}&size=${size}`,
+        {
+          headers: { Authorization: `Bearer ${authState.userToken}` },
+        }
+      )
+      .then((response) =>
+        dispatchChatMsg({ type: "GET", value: response.data.reverse() })
+      )
+      .catch((e) => console.log("getChatMsgErr: ", e.message));
+  };
+
   return (
     <RoomsContext.Provider
       value={{
@@ -136,6 +162,8 @@ const RoomsContextProvider = ({ children }) => {
         updateRoom,
         deleteRoom,
         leaveRoom,
+        chatMsgState,
+        getChatMessage,
       }}
     >
       {children}

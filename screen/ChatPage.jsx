@@ -8,7 +8,6 @@ import { AuthContext } from "../context/AuthContextProvider";
 import ChatMessage from "../components/ChatMessage";
 import DeleteRoomBtn from "../components/DeleteRoomBtn";
 import LeaveRoomBtn from "../components/LeaveRoomBtn";
-
 // chatData: {"master": false, "orderDate": "2022-11-11T00:11:20", "restaurantName": "좐", "roomId": 29, "title": "좌니방", "userCount": 2}
 // userInfo: {"image": "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg", "nickName": "황철원2", "userId": 3}
 
@@ -127,7 +126,8 @@ const ChatPage = ({
   navigation: { setOptions, goBack },
   route: { params },
 }) => {
-  const { leaveRoom, deleteRoom } = useContext(RoomsContext);
+  const { leaveRoom, deleteRoom, chatMsgState, getChatMessage } =
+    useContext(RoomsContext);
   const {
     authState: { userInfo, userToken },
   } = useContext(AuthContext);
@@ -137,6 +137,8 @@ const ChatPage = ({
   // TODO: chatMessages로 상태관리중인데, 무한스크롤도 할 겸 비효율적이니 useQuery를 적용하자.
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
+
+  const size = 15;
 
   const formatDate = (original_date) => {
     const date = new Date(original_date);
@@ -234,7 +236,7 @@ const ChatPage = ({
 
   useEffect(() => {
     connect();
-
+    getChatMessage(params.params.roomId, size);
     return () => disconnect();
   }, []);
 
@@ -250,7 +252,7 @@ const ChatPage = ({
         {/* chatMessages: [{"content": "Aaa", "createdAt": "2022-11-21T11:24:29", "nickName": "황철원", "roomId": 32, "userId": 3}] */}
         <KeyboardAvoidingView behavior={"padding"} keyboardVerticalOffset={55}>
           <ChatMessageList
-            data={chatMessages}
+            data={chatMsgState}
             keyExtractor={(item, index) => index}
             renderItem={({ item }) => (
               <ChatMessage item={item} formatDate={formatDate} />
