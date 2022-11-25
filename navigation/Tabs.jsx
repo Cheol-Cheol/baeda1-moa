@@ -19,7 +19,13 @@ const Tabs = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
-            return <Ionicons name="home-sharp" size={size} color="#3772FF" />;
+            return (
+              <Ionicons
+                name="home-sharp"
+                size={size}
+                color={focused ? "#3772FF" : color}
+              />
+            );
           },
           tabBarLabel: "Home",
         }}
@@ -31,7 +37,11 @@ const Tabs = () => {
           headerTitle: "채팅방 목록",
           tabBarIcon: ({ focused, color, size }) => {
             return (
-              <Ionicons name="chatbox-ellipses" size={size} color="#3772FF" />
+              <Ionicons
+                name="chatbox-ellipses"
+                size={size}
+                color={focused ? "#3772FF" : color}
+              />
             );
           },
           tabBarLabel: "Chat",
@@ -47,7 +57,7 @@ const Tabs = () => {
               <Ionicons
                 name="person-circle-sharp"
                 size={size}
-                color="#3772FF"
+                color={focused ? "#3772FF" : color}
               />
             );
           },
