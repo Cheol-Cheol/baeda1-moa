@@ -2,13 +2,9 @@ import React, { useReducer } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import {
-  KakaoOAuthToken,
-  KakaoProfile,
-  KakaoProfileNoneAgreement,
   getProfile as getKakaoProfile,
   login,
   logout,
-  unlink,
 } from "@react-native-seoul/kakao-login";
 
 const defaultAuthState = {
@@ -33,21 +29,18 @@ const authReducer = (prevState, action) => {
 
 const AuthContext = React.createContext({});
 
-// FIXME: 만약에 여기서 로직이 이상하다? useMemo을 안 적어서 그런걸수도?
 const AuthContextProvider = ({ children }) => {
   const [authState, dispatchAuth] = useReducer(authReducer, defaultAuthState);
 
+  //📍 로그인 (카카오)
   const kakaoSignIn = async () => {
-    // 1. kakao login 요청하는 API 부분
     const token = await login();
-    // 2. 서버에 토큰 전송하기
-    // body: kakaoToken
+
     axios
       .post("http://3.37.106.173/api/users", {
         kakaoToken: token.accessToken,
       })
       .then(async function (response) {
-        // 3. 토큰을 secure-storage에 저장한 다음, reducer(SIGN_IN)를 통해서 상태값을 바꿔준다.
         await SecureStore.setItemAsync(
           "userToken",
           response.headers.accesstoken
@@ -60,24 +53,29 @@ const AuthContextProvider = ({ children }) => {
       });
   };
 
+  //📍 로그아웃
   const kakaoSignOut = async () => {
     const message = await logout();
-    console.log("로그아웃: ", message);
+
     await SecureStore.deleteItemAsync("userToken");
     dispatchAuth({ type: "SIGN_OUT" });
     console.log(`카카오_로그아웃 성공! (MSG: ${message})`);
   };
 
+  //📍 토큰 가져오기
   const restoreToken = async () => {
     let userToken;
+
     try {
       userToken = await SecureStore.getItemAsync("userToken");
     } catch (e) {
       console.log("RestoreTokenErr: ", e.message);
     }
+
     dispatchAuth({ type: "RESTORE_TOKEN", token: userToken });
   };
 
+  //📍 프로필 정보 가져오기
   const getProfile = async () => {
     axios({
       method: "get",
@@ -90,8 +88,10 @@ const AuthContextProvider = ({ children }) => {
       .catch((e) => console.log("GetProfileErr: ", e.message));
   };
 
+  //📍 프로필 정보 수정
   const editProfile = async (updatedName) => {
     let data = { nickName: updatedName };
+
     axios
       .patch("http://3.37.106.173/api/users", data, {
         headers: { Authorization: `Bearer ${authState.userToken}` },
@@ -100,6 +100,7 @@ const AuthContextProvider = ({ children }) => {
       .catch((e) => console.log("EditProfileErr: ", e.message));
   };
 
+  //📍 회원탈퇴
   const retireUser = async () => {
     axios
       .delete("http://3.37.106.173/api/users", {

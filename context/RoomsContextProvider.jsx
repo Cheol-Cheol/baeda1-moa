@@ -5,8 +5,6 @@ import { AuthContext } from "./AuthContextProvider";
 const defaultRoomsState = [];
 
 const roomsReducer = (prevState, action) => {
-  // TODO: state 어떻게 관리할지 생각하자. defaultState도 [rooms:[{...},{...}], 다른 값]
-  // -> 근데 안해될듯? 왜? 여기는 room만 관리하니깐!
   switch (action.type) {
     case "CREATE":
       return [action.value, ...prevState];
@@ -51,6 +49,7 @@ const RoomsContextProvider = ({ children }) => {
 
   const { authState } = useContext(AuthContext);
 
+  //📍 채팅방 생성
   const addRoom = async (data) => {
     axios
       .post("http://3.37.106.173/api/rooms", data, {
@@ -59,6 +58,7 @@ const RoomsContextProvider = ({ children }) => {
       .catch((e) => console.log("addRoomErr: ", e.message));
   };
 
+  //📍 채팅방 조회
   const getRooms = async () => {
     axios
       .get("http://3.37.106.173/api/rooms", {
@@ -71,6 +71,7 @@ const RoomsContextProvider = ({ children }) => {
       .catch((e) => console.log("getRoomErr: ", e.message));
   };
 
+  //📍 채팅방 카테고리 별 조회
   const filterRooms = async (categoryId) => {
     if (categoryId === 0) getRooms();
     else {
@@ -85,6 +86,7 @@ const RoomsContextProvider = ({ children }) => {
     }
   };
 
+  //📍 참가한 채팅방들 조회
   const getMyRooms = async () => {
     axios
       .get("http://3.37.106.173/api/users/rooms", {
@@ -96,6 +98,7 @@ const RoomsContextProvider = ({ children }) => {
       .catch((e) => console.log("getMyChatRoomErr: ", e.message));
   };
 
+  //📍 채팅방 참가
   const enterRoom = async (roomId) => {
     axios
       .post(
@@ -108,21 +111,25 @@ const RoomsContextProvider = ({ children }) => {
       .catch((e) => console.log("enterRoomErr: ", e.message));
   };
 
+  //📍 채팅방 수정
   const updateRoom = async () => {
     // 1. Axios PUT
     dispatchRooms({ type: CREATE });
   };
 
-  // 📍 TODO: dispatch 값 없는 애들 설정해줘야 댐
+  //📍 채팅방 삭제
   const deleteRoom = async (roomId) => {
     axios
       .delete(`http://3.37.106.173/api/rooms/${roomId}`, {
         headers: { Authorization: `Bearer ${authState.userToken}` },
       })
       .catch((e) => console.log("deleteRoomErr: ", e.message));
+    // 📍 TODO: dispatch 값 없는 애들 설정해줘야 댐
+    // client 쪽에서도 바뀐 것이 적용되도록 dispatch를 적용해야 함
     // dispatchRooms({ type: CREATE });
   };
 
+  //📍 채팅방 나가기
   const leaveRoom = async (roomId) => {
     axios
       .delete(`http://3.37.106.173/api/rooms/${roomId}/users`, {
@@ -131,6 +138,7 @@ const RoomsContextProvider = ({ children }) => {
       .catch((e) => console.log("LeaveRoomERr: ", e.message));
   };
 
+  //📍 채팅 메시지 가져오기
   const getChatMessage = async (roomId, size) => {
     const presentTime = new Date();
     const formatDate = new Date(+presentTime + 3240 * 10000)
