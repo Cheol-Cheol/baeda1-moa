@@ -11,7 +11,9 @@ const TouchableOpacity = styled.TouchableOpacity`
   border-radius: 10px;
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  font-weight: 600;
+`;
 
 const CategoryItem = ({ name, categoryId }) => {
   const { filterRooms } = useContext(RoomsContext);

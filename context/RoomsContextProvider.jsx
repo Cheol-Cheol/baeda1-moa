@@ -14,6 +14,10 @@ const roomsReducer = (prevState, action) => {
       return [action.value];
     case "MYROOMS":
       return [...action.value];
+    case "DELETE": {
+      const copyState = prevState.filter((el) => el.roomId != action.value);
+      return [...copyState];
+    }
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -55,6 +59,7 @@ const RoomsContextProvider = ({ children }) => {
       .post("http://3.37.106.173/api/rooms", data, {
         headers: { Authorization: `Bearer ${authState.userToken}` },
       })
+      .then(() => getRooms())
       .catch((e) => console.log("addRoomErr: ", e.message));
   };
 
@@ -65,7 +70,6 @@ const RoomsContextProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${authState.userToken}` },
       })
       .then((response) => {
-        // FIXME: READ로 가져오면 이전에 있던 state가 처음에 렌더링되니, 새로운 type을 생성하자.
         dispatchRooms({ type: "READ", value: response.data });
       })
       .catch((e) => console.log("getRoomErr: ", e.message));
@@ -123,10 +127,8 @@ const RoomsContextProvider = ({ children }) => {
       .delete(`http://3.37.106.173/api/rooms/${roomId}`, {
         headers: { Authorization: `Bearer ${authState.userToken}` },
       })
+      .then(() => dispatchRooms({ type: "DELETE", value: roomId }))
       .catch((e) => console.log("deleteRoomErr: ", e.message));
-    // 📍 TODO: dispatch 값 없는 애들 설정해줘야 댐
-    // client 쪽에서도 바뀐 것이 적용되도록 dispatch를 적용해야 함
-    // dispatchRooms({ type: CREATE });
   };
 
   //📍 채팅방 나가기
@@ -135,11 +137,12 @@ const RoomsContextProvider = ({ children }) => {
       .delete(`http://3.37.106.173/api/rooms/${roomId}/users`, {
         headers: { Authorization: `Bearer ${authState.userToken}` },
       })
+      .then(() => dispatchRooms({ type: "DELETE", value: roomId }))
       .catch((e) => console.log("LeaveRoomERr: ", e.message));
   };
 
   //📍 채팅 메시지 가져오기
-  const getChatMessage = async (roomId, size) => {
+  const getChatMessage = async (roomId, size = 0) => {
     const presentTime = new Date();
     const formatDate = new Date(+presentTime + 3240 * 10000)
       .toISOString()
