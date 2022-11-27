@@ -8,6 +8,8 @@ import { AuthContext } from "../context/AuthContextProvider";
 import ChatMessage from "../components/ChatMessage";
 import DeleteRoomBtn from "../components/DeleteRoomBtn";
 import LeaveRoomBtn from "../components/LeaveRoomBtn";
+import { View } from "react-native";
+
 // chatData: {"master": false, "orderDate": "2022-11-11T00:11:20", "restaurantName": "좐", "roomId": 29, "title": "좌니방", "userCount": 2}
 // userInfo: {"image": "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg", "nickName": "황철원2", "userId": 3}
 
@@ -77,6 +79,11 @@ const ChatContainer = styled.View`
   background-color: white;
 `;
 
+const Container = styled.View`
+  flex: 0.9;
+  background-color: blue;
+`;
+
 const ChatInfo = styled.View`
   margin: 5px;
   border: 1px solid #4c80fa;
@@ -126,8 +133,13 @@ const ChatPage = ({
   navigation: { setOptions, goBack },
   route: { params },
 }) => {
-  const { leaveRoom, deleteRoom, chatMsgState, getChatMessage } =
-    useContext(RoomsContext);
+  const {
+    leaveRoom,
+    deleteRoom,
+    chatMsgState,
+    getChatMessage,
+    initChatMessage,
+  } = useContext(RoomsContext);
   const {
     authState: { userInfo, userToken },
   } = useContext(AuthContext);
@@ -175,6 +187,7 @@ const ChatPage = ({
 
   const disconnect = () => {
     client.current.deactivate();
+    initChatMessage();
   };
 
   const sendMsg = () => {
@@ -188,6 +201,7 @@ const ChatPage = ({
       }),
       headers: { Authorization: userToken },
     });
+    getChatMessage(params.params.roomId, size);
     setMessage("");
   };
 
@@ -249,8 +263,8 @@ const ChatPage = ({
           <OrderDate>주 문 시 간: {formatDate(chatData.orderDate)}</OrderDate>
         </ChatInfo>
 
-        {/* chatMessages: [{"content": "Aaa", "createdAt": "2022-11-21T11:24:29", "nickName": "황철원", "roomId": 32, "userId": 3}] */}
         <KeyboardAvoidingView behavior={"padding"} keyboardVerticalOffset={55}>
+          {/* chatMessages: [{"content": "Aaa", "createdAt": "2022-11-21T11:24:29", "nickName": "황철원", "roomId": 32, "userId": 3}] */}
           <ChatMessageList
             data={chatMsgState}
             keyExtractor={(item, index) => index}
@@ -258,6 +272,7 @@ const ChatPage = ({
               <ChatMessage item={item} formatDate={formatDate} />
             )}
           />
+
           <Keyboard>
             <TextInput onChangeText={onChangeHandler} value={message} />
             <SendBtn onPress={sendMsg}>

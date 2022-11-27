@@ -6,6 +6,8 @@ const defaultRoomsState = [];
 
 const roomsReducer = (prevState, action) => {
   switch (action.type) {
+    case "INIT":
+      return [];
     case "CREATE":
       return [action.value, ...prevState];
     case "READ":
@@ -141,6 +143,10 @@ const RoomsContextProvider = ({ children }) => {
       .catch((e) => console.log("LeaveRoomERr: ", e.message));
   };
 
+  const initRoom = () => {
+    dispatchRooms({ type: "INIT" });
+  };
+
   //📍 채팅 메시지 가져오기
   const getChatMessage = async (roomId, size = 0) => {
     const presentTime = new Date();
@@ -161,6 +167,10 @@ const RoomsContextProvider = ({ children }) => {
       .catch((e) => console.log("getChatMsgErr: ", e.message));
   };
 
+  const initChatMessage = () => {
+    dispatchChatMsg({ type: "INIT" });
+  };
+
   return (
     <RoomsContext.Provider
       value={{
@@ -173,8 +183,10 @@ const RoomsContextProvider = ({ children }) => {
         updateRoom,
         deleteRoom,
         leaveRoom,
+        initRoom,
         chatMsgState,
         getChatMessage,
+        initChatMessage,
       }}
     >
       {children}

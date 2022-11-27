@@ -26,11 +26,15 @@ const HSeparator = styled.View`
 
 const ChatListPage = () => {
   const [loading, setLoading] = useState(true);
-  const { roomsState, getMyRooms } = useContext(RoomsContext);
+  const { roomsState, getMyRooms, initRoom } = useContext(RoomsContext);
 
   useEffect(() => {
+    setLoading(true);
+    initRoom();
     getMyRooms();
     setLoading(false);
+
+    return () => initRoom();
   }, []);
 
   return (

@@ -171,9 +171,6 @@ const WritePage = ({ navigation: { goBack } }) => {
   };
 
   const onSubmitHandler = async () => {
-    // FIXME: react-hook-form 라이브러리로 폼 validation 가능하단 점 참고!
-    // 1. 데이터 다 들어갔나 유효성 체크하기 (특히 category는 null아닌 지 확인!)
-    // 2. 중복 데이터 생성 시 예외 처리하기
     if (
       enteredTitle &&
       enteredBusinessName &&
