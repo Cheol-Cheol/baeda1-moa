@@ -1,8 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import styled from "styled-components/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { View } from "react-native";
 import MasterIcon from "./UI/MasterIcon";
 
 const ListContainer = styled.TouchableOpacity`
@@ -22,12 +20,6 @@ const Title = styled.Text`
   font-weight: 500;
   margin-bottom: 5px;
 `;
-
-const TimeView = styled.View`
-  width: 65px;
-`;
-
-const Time = styled.Text``;
 
 const DialogView = styled.View``;
 
@@ -50,13 +42,9 @@ const ChatRoom = ({ fullData }) => {
 
       <RowView>
         <Title>{fullData.title}</Title>
-        {/* <TimeView>
-          <Time>{time}</Time>
-        </TimeView> */}
       </RowView>
       <DialogView>
-        {/* <Dialog>{dialog}</Dialog> */}
-        <Dialog>안녕ㅋㅋ</Dialog>
+        <Dialog>반갑습니다.</Dialog>
       </DialogView>
     </ListContainer>
   );

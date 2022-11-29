@@ -118,9 +118,13 @@ const RoomsContextProvider = ({ children }) => {
   };
 
   //📍 채팅방 수정
-  const updateRoom = async () => {
-    // 1. Axios PUT
-    dispatchRooms({ type: CREATE });
+  const updateRoom = async (body) => {
+    axios
+      .patch(`http://3.37.106.173/api/rooms/${roomId}/users`, body, {
+        headers: { Authorization: `Bearer ${authState.userToken}` },
+      })
+      .then(() => dispatchRooms({ type: "UPDATE" }))
+      .catch((e) => console.log("enterRoomErr: ", e.message));
   };
 
   //📍 채팅방 삭제
@@ -153,7 +157,6 @@ const RoomsContextProvider = ({ children }) => {
     const formatDate = new Date(+presentTime + 3240 * 10000)
       .toISOString()
       .replace(/\..*/, "");
-
     await axios
       .get(
         `http://3.37.106.173:8081/api/rooms/${roomId}/messages?lastMessageDate=${formatDate}&size=${size}`,

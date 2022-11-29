@@ -8,10 +8,6 @@ import { AuthContext } from "../context/AuthContextProvider";
 import ChatMessage from "../components/ChatMessage";
 import DeleteRoomBtn from "../components/DeleteRoomBtn";
 import LeaveRoomBtn from "../components/LeaveRoomBtn";
-import { View } from "react-native";
-
-// chatData: {"master": false, "orderDate": "2022-11-11T00:11:20", "restaurantName": "좐", "roomId": 29, "title": "좌니방", "userCount": 2}
-// userInfo: {"image": "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg", "nickName": "황철원2", "userId": 3}
 
 Date.prototype.format = function (f) {
   if (!this.valueOf()) return " ";
@@ -79,11 +75,6 @@ const ChatContainer = styled.View`
   background-color: white;
 `;
 
-const Container = styled.View`
-  flex: 0.9;
-  background-color: blue;
-`;
-
 const ChatInfo = styled.View`
   margin: 5px;
   border: 1px solid #4c80fa;
@@ -146,7 +137,6 @@ const ChatPage = ({
   const chatData = params.params;
 
   const client = useRef({});
-  // TODO: chatMessages로 상태관리중인데, 무한스크롤도 할 겸 비효율적이니 useQuery를 적용하자.
   const [chatMessages, setChatMessages] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -167,7 +157,7 @@ const ChatPage = ({
       debug: function (str) {
         console.log(str);
       },
-      reconnectDelay: 5000, //자동 재 연결
+      reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       onConnect: () => {
@@ -219,6 +209,10 @@ const ChatPage = ({
     goBack();
   };
 
+  const timeout = () => {
+    setTimeout(() => getChatMessage(params.params.roomId, size), 100);
+  };
+
   useEffect(() => {
     if (chatData.master) {
       setOptions({
@@ -251,8 +245,15 @@ const ChatPage = ({
   useEffect(() => {
     connect();
     getChatMessage(params.params.roomId, size);
-    return () => disconnect();
+    return () => {
+      disconnect();
+      timeout();
+    };
   }, []);
+
+  useEffect(() => {
+    timeout();
+  });
 
   return (
     <>
@@ -264,7 +265,6 @@ const ChatPage = ({
         </ChatInfo>
 
         <KeyboardAvoidingView behavior={"padding"} keyboardVerticalOffset={55}>
-          {/* chatMessages: [{"content": "Aaa", "createdAt": "2022-11-21T11:24:29", "nickName": "황철원", "roomId": 32, "userId": 3}] */}
           <ChatMessageList
             data={chatMsgState}
             keyExtractor={(item, index) => index}

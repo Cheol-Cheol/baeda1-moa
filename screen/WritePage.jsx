@@ -135,7 +135,7 @@ const WritePage = ({ navigation: { goBack } }) => {
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
-  // TODO: 📍 제목, 상호명 focus out시키기 onBlur?
+
   const onChangeTitle = (title) => {
     setEnteredTitle(title);
   };
@@ -145,7 +145,6 @@ const WritePage = ({ navigation: { goBack } }) => {
   };
 
   const onChangeOrderTime = (orderTime) => {
-    // 📍 유효성 검사 해야됨. 오늘 날짜보다 이전 날짜 선택 시 다시 선택하라고 알려주기
     hideDatePicker();
 
     const date = new Date(orderTime);
@@ -158,7 +157,6 @@ const WritePage = ({ navigation: { goBack } }) => {
   };
 
   const onChangeCategory = (category) => {
-    // console.log("category: ", category);
     setEnteredCategory(category);
   };
 

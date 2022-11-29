@@ -33,7 +33,6 @@ const ChatListPage = () => {
     initRoom();
     getMyRooms();
     setLoading(false);
-
     return () => initRoom();
   }, []);
 

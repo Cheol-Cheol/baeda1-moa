@@ -140,7 +140,6 @@ const List = ({ fullData }) => {
 
   const goToChatPage = () => {
     setModalVisible(!modalVisible);
-    // TODO: 여기에 채팅방목록에 채팅방 추가하는 통신을 해야함
     enterRoom(fullData.roomId);
     navigation.navigate("ChatPage", {
       params: { ...fullData },

@@ -90,11 +90,6 @@ const HomePage = ({ navigation: { navigate } }) => {
     getInitData();
   }, []);
 
-  // FIXME: 무한 호출 발생...
-  // useEffect(() => {
-  //   getRooms();
-  // }, [roomsState]);
-
   return (
     <Container>
       <Header>
